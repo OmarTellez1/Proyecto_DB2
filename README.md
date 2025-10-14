@@ -10,7 +10,7 @@ Base de datos: PostgreSQL
 Requerimientos:
 Para poder correr este programa se necesita tener instalado "node js"
 Para poder descargar las dependencias del proyecto hay que ejecutar el siguiente comando en la raiz del proyecto " npm install "
-|---Es necesario tener instaladas las dependencias y nodejs para poder correr el programa.
+Es necesario tener instaladas las dependencias y nodejs para poder correr el programa.
 La carpeta node_modules es la que contiene todos los archivos de las dependencias, eso no se toca.
 Si tu proyecto no tiene el node_modules significa que no tienes las dependencias instaladas.
 
@@ -23,3 +23,8 @@ estos cambios no se veran reflejados al instante, se tendra que volver a ejecuta
 
 "npm run dev" : Este script corre el servidor del programa y si escucha por cambios de archivos.
 |--------------------------------------------------------------------------------------------------------------------|
+
+Estructura de carpetas y archivos:
+Se trabajara con la estructura ya establecida, dentro de las carpetas del frontend y el backend, hay más carpetas con archivos vacios
+esos archivos vacios se pueden modificar, eliminar o lo que sea, pero las carpetas no deben ser modificadas o eliminadas.
+Sí se puede agregar mas carpetas o mas archivos, todo lo que necesiten.
