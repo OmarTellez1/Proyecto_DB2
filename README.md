@@ -8,7 +8,7 @@ Backend: Nodejs con expressjs
 Base de datos: PostgreSQL
 
 Requerimientos:
-Para poder correr este programa se necesita tener instalado "node js"
+Para poder correr este programa se necesita tener instalado "node js" y "npm" que es el gestor de paquetes de las independencias.
 Para poder descargar las dependencias del proyecto hay que ejecutar el siguiente comando en la raiz del proyecto " npm install "
 Es necesario tener instaladas las dependencias y nodejs para poder correr el programa.
 La carpeta node_modules es la que contiene todos los archivos de las dependencias, eso no se toca.
@@ -25,6 +25,8 @@ estos cambios no se veran reflejados al instante, se tendra que volver a ejecuta
 |--------------------------------------------------------------------------------------------------------------------|
 
 Estructura de carpetas y archivos:
+Yo Omar Téllez trabajare en el backend, asi que yo mantendre mi estructura de carpetas y archivos así.
 Se trabajara con la estructura ya establecida, dentro de las carpetas del frontend y el backend, hay más carpetas con archivos vacios
-esos archivos vacios se pueden modificar, eliminar o lo que sea, pero las carpetas no deben ser modificadas o eliminadas.
+esos archivos vacios se pueden modificar, eliminar o lo que sea.
+Lo mejor seria si las carpetas ya establecidas no son eliminadas, pero si quieren hacerlo de otra manera pueden.
 Sí se puede agregar mas carpetas o mas archivos, todo lo que necesiten.
