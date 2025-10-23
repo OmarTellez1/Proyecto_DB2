@@ -63,4 +63,36 @@ ProductService.getProductById = async (id) => {
   }
 };
 // ---------------------
+
+// --- NUEVA FUNCIÓN ---
+/**
+ * Valida y llama al modelo para actualizar un producto.
+ * @param {number} id - El ID del producto.
+ * @param {object} productData - Los datos a actualizar.
+ * @returns {object} El producto actualizado.
+ */
+ProductService.updateProduct = async (id, productData) => {
+  try {
+    // 1. (Validación CRUCIAL) Verificar si el producto existe
+    const existingProduct = await ProductModel.findById(id);
+    if (!existingProduct) {
+      throw new Error('Producto no encontrado.');
+    }
+
+    // 2. (Opcional) Validar los datos de entrada
+    // Ej: Si 'unidades_disponibles' viene en los datos, verificar que no sea negativo
+    if (productData.unidades_disponibles < 0) {
+      throw new Error('Las unidades disponibles no pueden ser negativas.');
+    }
+    // ... (otras validaciones que necesites) ...
+
+    // 3. Llamar al modelo para actualizar
+    const updatedProduct = await ProductModel.update(id, productData);
+    return updatedProduct;
+
+  } catch (error) {
+    throw error;
+  }
+};
+// ---------------------
 export default ProductService;

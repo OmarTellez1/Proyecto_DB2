@@ -73,4 +73,35 @@ ProductController.getById = async (req, res) => {
     }
   }
 };
+// --- NUEVA FUNCIÓN ---
+/**
+ * Maneja la petición PUT para actualizar un producto por su ID.
+ */
+ProductController.update = async (req, res) => {
+  try {
+    // 1. Obtenemos el ID de los parámetros
+    const { id } = req.params;
+    // 2. Obtenemos los datos a actualizar del body
+    const productData = req.body;
+
+    // 3. Llamamos al servicio
+    const updatedProduct = await ProductService.updateProduct(id, productData);
+
+    // 4. Respondemos con el producto actualizado (200 OK)
+    res.status(200).json(updatedProduct);
+
+  } catch (error) {
+    // 5. Manejo de errores
+    console.error('Error en ProductController.update:', error.message);
+
+    if (error.message.includes('Producto no encontrado')) {
+      res.status(404).json({ message: error.message });
+    } else if (error.message.includes('negativas')) { // Error de validación
+      res.status(400).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: 'Error interno del servidor' });
+    }
+  }
+};
+// ---------------------
 export default ProductController;

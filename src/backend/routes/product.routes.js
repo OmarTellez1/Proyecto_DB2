@@ -9,13 +9,14 @@ router.get('/', ProductController.getAll);
 // POST /api/productos/
 router.post('/', ProductController.create);
 
-// --- NUEVA RUTA ---
-// GET /api/productos/:id  (ej. /api/productos/10)
-// :id es un parámetro de ruta
+// GET /api/productos/:id
 router.get('/:id', ProductController.getById);
+
+// --- NUEVA RUTA ---
+// PUT /api/productos/:id
+router.put('/:id', ProductController.update);
 // -----------------
 
-// router.put('/:id', ...);
 // router.delete('/:id', ...);
 
 export default router;
