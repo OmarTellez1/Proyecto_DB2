@@ -104,4 +104,32 @@ ProductController.update = async (req, res) => {
   }
 };
 // ---------------------
+// --- NUEVA FUNCIÓN ---
+/**
+ * Maneja la petición DELETE para eliminar un producto por su ID.
+ */
+ProductController.remove = async (req, res) => {
+  try {
+    // 1. Obtenemos el ID de los parámetros
+    const { id } = req.params;
+
+    // 2. Llamamos al servicio para eliminar
+    await ProductService.deleteProduct(id);
+
+    // 3. Respondemos con éxito (200 OK)
+    // También es común usar 204 No Content (sin cuerpo de respuesta)
+    res.status(200).json({ message: 'Producto eliminado exitosamente.' });
+
+  } catch (error) {
+    // 4. Manejo de errores
+    console.error('Error en ProductController.remove:', error.message);
+
+    if (error.message.includes('Producto no encontrado')) {
+      res.status(404).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: 'Error interno del servidor' });
+    }
+  }
+};
+// ---------------------
 export default ProductController;

@@ -111,4 +111,20 @@ ProductModel.update = async (id, productData) => {
   // Devolvemos el producto actualizado
   return result.rows[0];
 };
+// --- NUEVA FUNCIÓN ---
+/**
+ * Función para eliminar un producto por su ID.
+ * @param {number} id - El ID del producto a eliminar.
+ */
+ProductModel.remove = async (id) => {
+  const query = 'DELETE FROM Productos WHERE Id_Producto = $1';
+  const values = [id];
+
+  // Simplemente ejecutamos la consulta.
+  // No necesitamos 'RETURNING *', pero sí 'await' para esperar que termine.
+  await pool.query(query, values);
+  
+  // No es necesario devolver nada, la acción se confirma si no hay error.
+};
+// ---------------------
 export default ProductModel;

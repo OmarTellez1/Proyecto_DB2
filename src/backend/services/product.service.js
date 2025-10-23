@@ -95,4 +95,25 @@ ProductService.updateProduct = async (id, productData) => {
   }
 };
 // ---------------------
+// --- NUEVA FUNCIÓN ---
+/**
+ * Valida y llama al modelo para eliminar un producto.
+ * @param {number} id - El ID del producto.
+ */
+ProductService.deleteProduct = async (id) => {
+  try {
+    // 1. (Validación CRUCIAL) Verificar si el producto existe
+    const existingProduct = await ProductModel.findById(id);
+    if (!existingProduct) {
+      throw new Error('Producto no encontrado.');
+    }
+
+    // 2. Si existe, llamamos al modelo para eliminarlo
+    await ProductModel.remove(id);
+
+  } catch (error) {
+    throw error;
+  }
+};
+// ---------------------
 export default ProductService;

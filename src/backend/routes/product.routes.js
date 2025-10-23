@@ -12,11 +12,12 @@ router.post('/', ProductController.create);
 // GET /api/productos/:id
 router.get('/:id', ProductController.getById);
 
-// --- NUEVA RUTA ---
 // PUT /api/productos/:id
 router.put('/:id', ProductController.update);
-// -----------------
 
-// router.delete('/:id', ...);
+// --- NUEVA RUTA ---
+// DELETE /api/productos/:id
+router.delete('/:id', ProductController.remove);
+// -----------------
 
 export default router;
