@@ -6,12 +6,15 @@ const router = Router();
 // GET /api/productos/
 router.get('/', ProductController.getAll);
 
-// --- NUEVA RUTA ---
 // POST /api/productos/
 router.post('/', ProductController.create);
+
+// --- NUEVA RUTA ---
+// GET /api/productos/:id  (ej. /api/productos/10)
+// :id es un parámetro de ruta
+router.get('/:id', ProductController.getById);
 // -----------------
 
-// router.get('/:id', ...);
 // router.put('/:id', ...);
 // router.delete('/:id', ...);
 

@@ -45,5 +45,32 @@ ProductController.create = async (req, res) => {
   }
 };
 // ---------------------
+// --- NUEVA FUNCIÓN ---
+/**
+ * Maneja la petición GET para obtener un producto por su ID.
+ */
+ProductController.getById = async (req, res) => {
+  try {
+    // 1. Obtenemos el ID de los parámetros de la URL (ej. /api/productos/5)
+    const { id } = req.params;
 
+    // 2. Llamamos al servicio
+    const product = await ProductService.getProductById(id);
+
+    // 3. Respondemos con el producto encontrado (200 OK)
+    res.status(200).json(product);
+
+  } catch (error) {
+    // 4. Manejo de errores
+    console.error('Error en ProductController.getById:', error.message);
+
+    // Si el error es "Producto no encontrado" (del servicio), enviamos 404
+    if (error.message.includes('Producto no encontrado')) {
+      res.status(404).json({ message: error.message });
+    } else {
+      // Otro error (ej. ID no es un número, error de BD)
+      res.status(500).json({ message: 'Error interno del servidor' });
+    }
+  }
+};
 export default ProductController;

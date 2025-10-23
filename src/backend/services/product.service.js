@@ -42,5 +42,25 @@ ProductService.createProduct = async (productData) => {
   }
 };
 // ---------------------
+// --- NUEVA FUNCIÓN -- Obtener producto por ID-
+/**
+ * Llama al modelo para obtener un producto por su ID.
+ * @param {number} id - El ID del producto.
+ * @returns {object} El producto encontrado.
+ */
+ProductService.getProductById = async (id) => {
+  try {
+    const product = await ProductModel.findById(id);
 
+    // Lógica de negocio: ¿Qué pasa si el ID no existe?
+    if (!product) {
+      throw new Error('Producto no encontrado.');
+    }
+
+    return product;
+  } catch (error) {
+    throw error;
+  }
+};
+// ---------------------
 export default ProductService;

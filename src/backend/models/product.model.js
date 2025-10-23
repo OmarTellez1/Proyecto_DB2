@@ -47,5 +47,21 @@ ProductModel.create = async (productData) => {
   return result.rows[0];
 };
 // ---------------------
+// --- NUEVA FUNCIÓN ---GET BY ID ---
+/**
+ * Función para buscar un producto por su ID.
+ * @param {number} id - El ID del producto.
+ * @returns {object | null} El producto encontrado o null si no existe.
+ */
+ProductModel.findById = async (id) => {
+  const query = 'SELECT * FROM Productos WHERE Id_Producto = $1';
+  const values = [id];
+
+  const result = await pool.query(query, values);
+
+  // result.rows[0] contendrá el producto si se encuentra
+  // Si no se encuentra, result.rows estará vacío y esto devolverá undefined (o null)
+  return result.rows[0];
+};
 
 export default ProductModel;
