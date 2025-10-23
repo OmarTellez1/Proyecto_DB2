@@ -1,15 +1,16 @@
 import { Router } from 'express';
-// Importamos el controlador
 import ProductController from '../controllers/product.controller.js';
 
 const router = Router();
 
-// Definimos la ruta GET /
-// Cuando alguien visite GET /api/productos/, se ejecutará ProductController.getAll
+// GET /api/productos/
 router.get('/', ProductController.getAll);
 
-// Aquí añadiremos luego POST, PUT, DELETE
-// router.post('/', ...);
+// --- NUEVA RUTA ---
+// POST /api/productos/
+router.post('/', ProductController.create);
+// -----------------
+
 // router.get('/:id', ...);
 // router.put('/:id', ...);
 // router.delete('/:id', ...);

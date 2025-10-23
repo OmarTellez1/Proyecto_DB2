@@ -1,25 +1,49 @@
-// Importamos el servicio
 import ProductService from '../services/product.service.js';
 
 const ProductController = {};
 
 /**
  * Maneja la petición GET para obtener todos los productos.
- * Llama al servicio y envía la respuesta.
  */
 ProductController.getAll = async (req, res) => {
   try {
-    // 1. Llama al servicio
     const products = await ProductService.getAllProducts();
-
-    // 2. Envía la respuesta JSON
     res.status(200).json(products);
-
   } catch (error) {
-    // 3. Manejo de errores
     console.error('Error en ProductController.getAll:', error.message);
     res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
+
+// --- NUEVA FUNCIÓN ---
+/**
+ * Maneja la petición POST para crear un nuevo producto.
+ */
+ProductController.create = async (req, res) => {
+  try {
+    // 1. Obtenemos los datos del cuerpo (body) de la petición
+    // (Asegúrate de tener app.use(express.json()) en index.js)
+    const productData = req.body;
+
+    // 2. Llamamos al servicio para crear el producto
+    const newProduct = await ProductService.createProduct(productData);
+
+    // 3. Respondemos con éxito (código 201 - Created) y el nuevo producto
+    res.status(201).json(newProduct);
+
+  } catch (error) {
+    // 4. Manejo de errores
+    console.error('Error en ProductController.create:', error.message);
+    
+    // Si el error es por validación (del servicio), enviamos un 400 (Bad Request)
+    if (error.message.includes('obligatorios') || error.message.includes('negativas')) {
+      res.status(400).json({ message: error.message });
+    } else {
+      // Si es otro tipo de error (ej. la BD se cayó)
+      res.status(500).json({ message: 'Error interno del servidor' });
+    }
+  }
+};
+// ---------------------
 
 export default ProductController;
