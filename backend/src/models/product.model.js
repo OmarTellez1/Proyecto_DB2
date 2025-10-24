@@ -126,5 +126,5 @@ ProductModel.remove = async (id) => {
   
   // No es necesario devolver nada, la acción se confirma si no hay error.
 };
-// ---------------------
+// --------------------
 export default ProductModel;
