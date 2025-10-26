@@ -1,24 +1,20 @@
 import express from 'express';
-import cors from 'cors'; // <-- 1. IMPORTAMOS CORS
+import cors from 'cors';
 import { config } from './config/env.js';
 import pool from './config/db.js';
 
-// Importamos nuestras rutas de productos
+// Importamos rutas
 import productRoutes from './routes/product.routes.js';
+import userRoutes from './routes/user.routes.js'; // <-- 1. IMPORTAMOS RUTAS DE USUARIO
 
-// 1. Inicializar la aplicación
 const app = express();
 const PORT = config.server.port;
 
-// 2. Middlewares
-// Le decimos a Express que entienda JSON
+// Middlewares
 app.use(express.json());
+app.use(cors());
 
-// Le decimos a Express que use CORS
-// Esto debe ir ANTES de tus rutas
-app.use(cors()); // <-- 2. USAMOS CORS
-
-// 3. Rutas
+// Rutas
 app.get('/', (req, res) => {
   res.send('¡Hola! El servidor está funcionando correctamente.');
 });
@@ -26,11 +22,10 @@ app.get('/', (req, res) => {
 // Usamos las rutas de productos (ej. /api/productos)
 app.use('/api/productos', productRoutes);
 
-// (Aquí añadiremos las rutas de usuarios pronto)
-// app.use('/api/usuarios', userRoutes);
+// Usamos las rutas de usuarios (ej. /api/usuarios)
+app.use('/api/usuarios', userRoutes); // <-- 2. USAMOS LAS RUTAS
 
-// 4. Iniciar el servidor
+// Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`🚀 Servidor Express escuchando en http://localhost:${PORT}`);
 });
-//usar la siguiente url para probar el "get" http://localhost:3000/api/productos
