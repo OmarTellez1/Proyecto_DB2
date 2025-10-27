@@ -14,5 +14,8 @@ export const config = {
   // Aquí podrías añadir otras configuraciones, como el puerto del servidor
    server: {
      port: process.env.PORT || 3000
-   }
+   },
+   jwt: {
+    secret: process.env.JWT_SECRET
+  }
 };

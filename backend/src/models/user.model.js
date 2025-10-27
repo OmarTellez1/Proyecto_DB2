@@ -118,4 +118,26 @@ UserModel.update = async (id, dataToUpdate) => {
 
 // La función 'remove' (borrado físico) se elimina intencionalmente.
 
+// --- NUEVA FUNCIÓN ---
+/**
+ * Busca un usuario por su cédula.
+ * ¡Esta es la única función que DEBE seleccionar la contraseña y el estado!
+ * @param {string} cedula - La cédula del usuario.
+ * @returns {object | null} El usuario completo (incluyendo hash de contraseña).
+ */
+UserModel.findByCedula = async (cedula) => {
+  // Seleccionamos todos los campos necesarios para la autenticación
+  const query = `
+    SELECT id_usuario, nombre, apellido, rol, estado, contrasena 
+    FROM usuarios 
+    WHERE cedula = $1;
+  `;
+  const values = [cedula];
+  
+  const result = await pool.query(query, values);
+  
+  // Devolvemos el usuario completo
+  return result.rows[0];
+};
+// ---------------------
 export default UserModel;

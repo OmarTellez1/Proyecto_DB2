@@ -6,6 +6,7 @@ import pool from './config/db.js';
 // Importamos rutas
 import productRoutes from './routes/product.routes.js';
 import userRoutes from './routes/user.routes.js'; // <-- 1. IMPORTAMOS RUTAS DE USUARIO
+import authRoutes from './routes/auth.routes.js';
 
 const app = express();
 const PORT = config.server.port;
@@ -24,7 +25,8 @@ app.use('/api/productos', productRoutes);
 
 // Usamos las rutas de usuarios (ej. /api/usuarios)
 app.use('/api/usuarios', userRoutes); // <-- 2. USAMOS LAS RUTAS
-
+//Ruta de autenticación de usuario
+app.use('/api/auth', authRoutes);
 // Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`🚀 Servidor Express escuchando en http://localhost:${PORT}`);
