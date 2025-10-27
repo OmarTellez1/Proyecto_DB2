@@ -83,4 +83,51 @@ UserModel.findById = async (id) => {
   return result.rows[0];
 };
 // ---------------------
+// --- NUEVA FUNCIÓN ---
+/**
+ * Función para actualizar un usuario por su ID.
+ * Permite actualizaciones parciales.
+ * @param {number} id - El ID del usuario a actualizar.
+ * @param {object} dataToUpdate - Objeto con los campos a actualizar (ej. { Rol: 'Admin', Contrasena: 'hash...' }).
+ * @returns {object | null} El usuario actualizado (sin contraseña).
+ */
+UserModel.update = async (id, dataToUpdate) => {
+  // 1. Obtenemos las claves (campos) del objeto
+  // Ej: ['Nombre', 'Rol', 'Contrasena']
+  const fields = Object.keys(dataToUpdate);
+
+  // 2. Creamos la parte SET de la consulta dinámicamente
+  // Ej: Nombre = $1, Rol = $2, Contrasena = $3
+  // ¡Sin comillas en los campos para que Postgres no distinga mayúsculas/minúsculas!
+  const setString = fields
+    .map((field, index) => `${field} = $${index + 1}`)
+    .join(', ');
+
+  // Si no hay campos, no hacemos nada
+  if (setString.length === 0) {
+    return UserModel.findById(id);
+  }
+
+  // 3. Obtenemos los valores
+  const values = Object.values(dataToUpdate);
+  
+  // 4. Añadimos el ID al final del array de valores para el WHERE
+  const idIndex = values.length + 1;
+  values.push(id);
+
+  // 5. Construimos la consulta final
+  // Devolvemos solo los campos seguros
+  const query = `
+    UPDATE Usuarios
+    SET ${setString}
+    WHERE Id_Usuario = $${idIndex}
+    RETURNING Id_Usuario, Nombre, Apellido, Correo_Electronico, Rol;
+  `;
+
+  // 6. Ejecutamos la consulta
+  const result = await pool.query(query, values);
+
+  return result.rows[0];
+};
+// ---------------------
 export default UserModel;

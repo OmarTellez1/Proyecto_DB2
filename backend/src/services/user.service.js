@@ -89,5 +89,65 @@ UserService.getUserById = async (id) => {
     throw error;
   }
 };
+// --- FUNCIÓN MODIFICADA ---
+/**
+ * Valida, hashea (si es necesario) y actualiza un usuario.
+ * @param {number} id - El ID del usuario.
+ * @param {object} updateData - Los datos a actualizar (ej. { nombre: '...', contrasena: 'pass123' }).
+ * @returns {object} El usuario actualizado.
+ */
+UserService.updateUser = async (id, updateData) => {
+  try {
+    // 1. (Validación) Verificar si el usuario existe
+    const existingUser = await UserModel.findById(id);
+    if (!existingUser) {
+      throw new Error('Usuario no encontrado.');
+    }
+
+    // 2. (Seguridad) Manejo de la contraseña
+    // Verificamos si el objeto 'updateData' trae el campo 'contrasena' (¡minúscula!)
+    if (updateData.contrasena) {
+      
+      // Si trae contraseña, la hasheamos
+      const hashedPassword = await bcrypt.hash(updateData.contrasena, 10);
+      
+      // ¡IMPORTANTE! Reemplazamos/Añadimos la contraseña hasheada
+      // Y usamos el nombre de la columna de la BD (Postgres la pondrá en minúscula)
+      updateData.Contrasena = hashedPassword;
+      
+      // Borramos la de texto plano para que el modelo no la procese
+      delete updateData.contrasena; 
+    }
+
+    // 3. (Validación de Rol)
+    // Asumimos que el JSON viene en minúscula, pero la BD espera mayúscula
+    if (updateData.rol) {
+        if (updateData.rol !== 'Admin' && updateData.rol !== 'Cliente') {
+            throw new Error("El rol debe ser 'Admin' o 'Cliente'.");
+        }
+        updateData.Rol = updateData.rol; // Mapeamos al nombre de la columna
+        delete updateData.rol;
+    }
+
+    // ... (Mapear otros campos si es necesario, ej. Nombre, Apellido) ...
+    // Esto es necesario si el JSON siempre viene en minúscula pero la BD
+    // (o el modelo) espera mayúsculas.
+    
+    // 4. Llamar al modelo con los datos listos
+    const updatedUser = await UserModel.update(id, updateData);
+    
+    if (!updatedUser) {
+      throw new Error('No se pudo actualizar el usuario.');
+    }
+    
+    return updatedUser;
+
+  } catch (error) {
+    // 5. Manejo de errores de duplicados (si actualizan cédula o correo)
+    // ... (código existente) ...
+    // ... (El manejo de errores 23505 sigue igual) ...
+    throw error;
+  }
+};
 // ---------------------
 export default UserService;

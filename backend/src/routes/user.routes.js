@@ -9,12 +9,14 @@ router.post('/', UserController.create);
 // GET /api/usuarios/
 router.get('/', UserController.getAll);
 
-// --- NUEVA RUTA ---
-// GET /api/usuarios/:id  (ej. /api/usuarios/16)
-// :id es un parámetro de ruta
+// GET /api/usuarios/:id
 router.get('/:id', UserController.getById);
+
+// --- NUEVA RUTA ---
+// PUT /api/usuarios/:id
+router.put('/:id', UserController.update);
 // -----------------
 
-// (Aquí añadiremos PUT, DELETE luego)
+// (Aquí añadiremos DELETE luego)
 
 export default router;

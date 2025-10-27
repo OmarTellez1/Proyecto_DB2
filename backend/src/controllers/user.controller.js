@@ -82,4 +82,33 @@ UserController.getById = async (req, res) => {
   }
 };
 // ---------------------
+UserController.update = async (req, res) => {
+  try {
+    // 1. Obtenemos el ID de los parámetros
+    const { id } = req.params;
+    // 2. Obtenemos los datos a actualizar del body
+    const updateData = req.body;
+
+    // 3. Llamamos al servicio
+    const updatedUser = await UserService.updateUser(id, updateData);
+
+    // 4. Respondemos con el usuario actualizado (200 OK)
+    res.status(200).json(updatedUser);
+
+  } catch (error) {
+    // 5. Manejo de errores
+    console.error('Error en UserController.update:', error.message);
+
+    if (error.message.includes('Usuario no encontrado')) {
+      res.status(404).json({ message: error.message });
+    } else if (error.message.includes('ya está registrada')) { // Conflicto (409)
+      res.status(409).json({ message: error.message });
+    } else if (error.message.includes('El rol debe ser')) { // Petición mala (400)
+      res.status(400).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: 'Error interno del servidor' });
+    }
+  }
+};
+// ---------------------
 export default UserController;
