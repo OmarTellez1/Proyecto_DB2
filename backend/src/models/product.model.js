@@ -126,5 +126,40 @@ ProductModel.remove = async (id) => {
   
   // No es necesario devolver nada, la acción se confirma si no hay error.
 };
-// --------------------
+// -------------------
+// --- NUEVA FUNCIÓN (PARA EL SERVICIO) ---
+/**
+ * Busca un producto para facturación y ¡LO BLOQUEA!
+ * @param {number} id - ID del producto.
+ * @param {object} client - La conexión activa de la transacción.
+ */
+ProductModel.findForBilling = async (id, client) => {
+  // "FOR UPDATE" bloquea esta fila hasta que la transacción termine (COMMIT o ROLLBACK)
+  // Esto evita que dos personas compren el último ítem al mismo tiempo.
+  const query = `
+    SELECT nombre_producto, precio_unitario, unidades_disponibles
+    FROM productos
+    WHERE id_producto = $1
+    FOR UPDATE; 
+  `;
+  const result = await client.query(query, [id]);
+  return result.rows[0];
+};
+
+// --- NUEVA FUNCIÓN ---
+/**
+ * Actualiza el stock de un producto.
+ * @param {number} id - ID del producto.
+ * @param {number} unidadesCompradas - Cuántas unidades se llevaron.
+ * @param {object} client - La conexión activa de la transacción.
+ */
+ProductModel.updateStock = async (id, unidadesCompradas, client) => {
+  const query = `
+    UPDATE productos
+    SET unidades_disponibles = unidades_disponibles - $1
+    WHERE id_producto = $2;
+  `;
+  const values = [unidadesCompradas, id];
+  await client.query(query, values);
+};
 export default ProductModel;

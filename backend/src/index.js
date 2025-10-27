@@ -7,6 +7,7 @@ import pool from './config/db.js';
 import productRoutes from './routes/product.routes.js';
 import userRoutes from './routes/user.routes.js'; // <-- 1. IMPORTAMOS RUTAS DE USUARIO
 import authRoutes from './routes/auth.routes.js';
+import facturaRoutes from './routes/factura.routes.js';
 
 const app = express();
 const PORT = config.server.port;
@@ -27,6 +28,8 @@ app.use('/api/productos', productRoutes);
 app.use('/api/usuarios', userRoutes); // <-- 2. USAMOS LAS RUTAS
 //Ruta de autenticación de usuario
 app.use('/api/auth', authRoutes);
+// ruta de transaccion de facturas
+app.use('/api/facturas', facturaRoutes);
 // Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`🚀 Servidor Express escuchando en http://localhost:${PORT}`);
