@@ -17,5 +17,9 @@ export const config = {
    },
    jwt: {
     secret: process.env.JWT_SECRET
+  },
+  email: {
+    apiKey: process.env.SENDGRID_API_KEY,
+    fromEmail: 'otellez@est.ecotec.edu.ec' // El correo que verificaste
   }
 };
