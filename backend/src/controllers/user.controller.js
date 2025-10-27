@@ -111,4 +111,36 @@ UserController.update = async (req, res) => {
   }
 };
 // ---------------------
+// --- FUNCIÓN 'remove' (ACTUALIZADA/AÑADIDA) ---
+/**
+ * Maneja la petición DELETE para "borrar lógicamente" (desactivar) un usuario.
+ */
+UserController.remove = async (req, res) => {
+  try {
+    // 1. Obtenemos el ID de los parámetros
+    const { id } = req.params;
+
+    // 2. Llamamos al servicio (que ahora hace 'soft delete')
+    await UserService.deleteUser(id);
+
+    // 3. Respondemos con un mensaje más preciso
+    res.status(200).json({ message: 'Usuario desactivado exitosamente.' });
+
+  } catch (error) {
+    // 4. Manejo de errores
+    console.error('Error en UserController.remove:', error.message);
+
+    if (error.message.includes('Usuario no encontrado')) {
+      res.status(404).json({ message: error.message });
+    } 
+    // ¡NUEVO! Manejo del error de 'ya desactivado' (400 Bad Request)
+    else if (error.message.includes('ya ha sido desactivado')) {
+      res.status(400).json({ message: error.message });
+    } 
+    else {
+      res.status(500).json({ message: 'Error interno del servidor' });
+    }
+  }
+};
+// ---------------------
 export default UserController;

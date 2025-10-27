@@ -17,6 +17,11 @@ router.get('/:id', UserController.getById);
 router.put('/:id', UserController.update);
 // -----------------
 
-// (Aquí añadiremos DELETE luego)
+
+// --- RUTA DELETE (ACTUALIZADA/AÑADIDA) ---
+// DELETE /api/usuarios/:id
+// Esto conecta la URL con la función del controlador
+router.delete('/:id', UserController.remove);
+// -----------------
 
 export default router;
