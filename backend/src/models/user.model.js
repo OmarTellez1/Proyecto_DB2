@@ -139,18 +139,20 @@ UserModel.findByCedula = async (cedula) => {
   // Devolvemos el usuario completo
   return result.rows[0];
 };
-// --------------------
-// --- NUEVA FUNCIÓN ---
+// --- FUNCIÓN MODIFICADA ---
 /**
- * Busca el nombre y correo de un usuario por su ID.
- * Optimizado para ser usado dentro de una transacción.
+ * Busca los detalles de un usuario por su ID para el correo de facturación.
  * @param {number} id - El ID del usuario.
  * @param {object} client - La conexión activa de la transacción.
- * @returns {object} { nombre, correo_electronico }
+ * @returns {object} { nombre, apellido, cedula, celular, correo_electronico }
  */
 UserModel.findDetailsForEmail = async (id, client) => {
-  const query = 'SELECT nombre, correo_electronico FROM usuarios WHERE id_usuario = $1';
-  // Usamos el 'client' de la transacción para asegurar consistencia
+  // Añadimos apellido, cedula y celular a la consulta
+  const query = `
+    SELECT nombre, apellido, cedula, celular, correo_electronico 
+    FROM usuarios 
+    WHERE id_usuario = $1
+  `;
   const result = await client.query(query, [id]);
   return result.rows[0];
 };

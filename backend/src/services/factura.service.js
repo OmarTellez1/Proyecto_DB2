@@ -82,15 +82,18 @@ FacturaService.createFactura = async (idCliente, items) => {
 
   try {
     
-    // --- REEMPLAZA TU 'htmlCorreo' CON ESTO ---
+// --- 'htmlCorreo' ACTUALIZADO ---
     const htmlCorreo = `
       <div style="font-family: Arial, sans-serif; line-height: 1.6; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px;">
-        <h2 style="color: #333;">¡Gracias por tu compra, ${cliente.nombre}!</h2>
+        
+        <h2 style="color: #333;">¡Gracias por tu compra, ${cliente.nombre} ${cliente.apellido}!</h2>
         <p>Tu factura #${idFactura} ha sido procesada exitosamente.</p>
         
         <h3 style="border-bottom: 2px solid #f4f4f4; padding-bottom: 5px;">Resumen de la Compra</h3>
         <p>
-          <strong>Cliente:</strong> ${cliente.nombre}<br>
+          <strong>Cliente:</strong> ${cliente.nombre} ${cliente.apellido}<br>
+          <strong>Cédula:</strong> ${cliente.cedula}<br>
+          <strong>Celular:</strong> ${cliente.celular ? cliente.celular : 'N/A'}<br>
           <strong>Correo:</strong> ${cliente.correo_electronico}<br>
           <strong>Fecha:</strong> ${fechaLocal}<br>
           <strong style="font-size: 1.1em;">Total Pagado:</strong> <strong style="font-size: 1.1em; color: #000;">$${totalFormateado}</strong>
@@ -122,16 +125,16 @@ FacturaService.createFactura = async (idCliente, items) => {
         </p>
       </div>
     `;
-    // --- FIN DEL REEMPLAZO ---
+    // --- FIN DE LA ACTUALIZACIÓN ---
 
     // Preparamos el 'mensaje' que pide @sendgrid/mail
     const msg = {
       to: cliente.correo_electronico, 
       from: {
-        name: 'Nombre Empresa', 
+        name: 'Proyecto_DB2', 
         email: config.email.fromEmail 
       },
-      subject: `Confirmación de tu Factura #${idFactura} - Nombre Empresa`,
+      subject: `Gracias por comprar en nuestra tienda online, eres nuestra factura #${idFactura}`,
       html: htmlCorreo // <-- Ahora usa la plantilla detallada
     };
     
