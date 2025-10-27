@@ -69,5 +69,25 @@ UserService.getAllUsers = async () => {
   }
 };
 // ---------------------
+// --- NUEVA FUNCIÓN ---
+/**
+ * Llama al modelo para obtener un usuario por su ID.
+ * @param {number} id - El ID del usuario.
+ * @returns {object} El usuario encontrado.
+ */
+UserService.getUserById = async (id) => {
+  try {
+    const user = await UserModel.findById(id);
 
+    // Lógica de negocio: ¿Qué pasa si el ID no existe?
+    if (!user) {
+      throw new Error('Usuario no encontrado.');
+    }
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+// ---------------------
 export default UserService;

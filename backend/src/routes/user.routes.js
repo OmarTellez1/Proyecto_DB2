@@ -6,11 +6,15 @@ const router = Router();
 // POST /api/usuarios/
 router.post('/', UserController.create);
 
-// --- NUEVA RUTA ---
 // GET /api/usuarios/
 router.get('/', UserController.getAll);
+
+// --- NUEVA RUTA ---
+// GET /api/usuarios/:id  (ej. /api/usuarios/16)
+// :id es un parámetro de ruta
+router.get('/:id', UserController.getById);
 // -----------------
 
-// (Aquí añadiremos GET /:id, PUT, DELETE luego)
+// (Aquí añadiremos PUT, DELETE luego)
 
 export default router;

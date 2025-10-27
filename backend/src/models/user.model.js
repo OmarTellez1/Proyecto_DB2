@@ -61,4 +61,26 @@ UserModel.findAll = async () => {
   return result.rows;
 };
 // ---------------------
+// --- NUEVA FUNCIÓN ---
+/**
+ * Función para buscar un usuario por su ID (excluyendo la contraseña).
+ * @param {number} id - El ID del usuario.
+ * @returns {object | null} El usuario encontrado o null si no existe.
+ */
+UserModel.findById = async (id) => {
+  // Seleccionamos explícitamente los campos seguros
+  const query = `
+    SELECT Id_Usuario, Nombre, Apellido, Cedula, Celular, Correo_Electronico, Rol 
+    FROM Usuarios 
+    WHERE Id_Usuario = $1;
+  `;
+  const values = [id];
+
+  const result = await pool.query(query, values);
+
+  // result.rows[0] contendrá el usuario si se encuentra
+  // Si no, result.rows estará vacío y esto devolverá undefined (o null)
+  return result.rows[0];
+};
+// ---------------------
 export default UserModel;

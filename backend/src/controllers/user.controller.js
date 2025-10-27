@@ -53,4 +53,33 @@ UserController.getAll = async (req, res) => {
   }
 };
 // ---------------------
+// --- NUEVA FUNCIÓN ---
+/**
+ * Maneja la petición GET para obtener un usuario por su ID.
+ */
+UserController.getById = async (req, res) => {
+  try {
+    // 1. Obtenemos el ID de los parámetros de la URL (ej. /api/usuarios/16)
+    const { id } = req.params;
+
+    // 2. Llamamos al servicio
+    const user = await UserService.getUserById(id);
+
+    // 3. Respondemos con el usuario encontrado (200 OK)
+    res.status(200).json(user);
+
+  } catch (error) {
+    // 4. Manejo de errores
+    console.error('Error en UserController.getById:', error.message);
+
+    // Si el error es "Usuario no encontrado" (del servicio), enviamos 404
+    if (error.message.includes('Usuario no encontrado')) {
+      res.status(404).json({ message: error.message });
+    } else {
+      // Otro error (ej. ID no es un número, error de BD)
+      res.status(500).json({ message: 'Error interno del servidor' });
+    }
+  }
+};
+// ---------------------
 export default UserController;
