@@ -11,4 +11,9 @@ const router = Router();
 // 2. Si es válido, pasa al controlador (FacturaController.create).
 router.post('/', authMiddleware, FacturaController.create);
 
+// --- NUEVA RUTA ---
+// GET /api/facturas/:id (Ruta para que el Admin consulte)
+// También la protegemos con el authMiddleware
+router.get('/:id', authMiddleware, FacturaController.getById);
+
 export default router;

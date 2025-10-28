@@ -11,7 +11,7 @@ import sgMail from '../config/mailer.js';
 // ----------------------------------
 
 const FacturaService = {};
-
+//----------Inicio de funcion FacturaService.createFactura-----------
 FacturaService.createFactura = async (idCliente, items) => {
   const client = await pool.connect();
 
@@ -163,5 +163,32 @@ FacturaService.createFactura = async (idCliente, items) => {
     }
   };
 };
+//----------Fin de funcion FacturaService.createFactura-----------
 
+// --- NUEVA FUNCIÓN ---
+/**
+ * Obtiene los detalles completos de una factura por su ID.
+ * @param {number} idFactura - El ID de la factura.
+ * @returns {object} La factura completa.
+ */
+FacturaService.getFacturaDetails = async (idFactura) => {
+  try {
+    const factura = await FacturaModel.findCompleteById(idFactura);
+
+    if (!factura) {
+      throw new Error('Factura no encontrada.');
+    }
+
+    // (Opcional) Corregir el formato de fecha y total si es necesario
+    // (Aunque la BD ya debería devolverlos bien)
+    factura.fecha = new Date(factura.fecha).toISOString().split('T')[0];
+    factura.total = Number(factura.total).toFixed(2);
+
+    return factura;
+
+  } catch (error) {
+    throw error;
+  }
+};
+// ---------------------
 export default FacturaService;

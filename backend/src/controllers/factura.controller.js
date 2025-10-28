@@ -41,5 +41,37 @@ FacturaController.create = async (req, res) => {
     }
   }
 };
+// --- NUEVA FUNCIÓN ---
+/**
+ * Maneja la petición GET para obtener una factura por su ID.
+ * Solo accesible para Admins.
+ */
+FacturaController.getById = async (req, res) => {
+  try {
+    // 1. Verificación de Rol (¡Importante!)
+    if (req.user.rol !== 'Admin') {
+      return res.status(403).json({ message: 'Acceso denegado. Solo los administradores pueden ver esta información.' });
+    }
 
+    // 2. Obtener el ID de la factura
+    const { id } = req.params;
+
+    // 3. Llamar al servicio
+    const factura = await FacturaService.getFacturaDetails(id);
+
+    // 4. Enviar respuesta
+    res.status(200).json(factura);
+
+  } catch (error) {
+    // 5. Manejo de errores
+    console.error('Error en FacturaController.getById:', error.message);
+    
+    if (error.message.includes('Factura no encontrada')) {
+      res.status(404).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+  }
+};
+// ---------------------
 export default FacturaController;
