@@ -26,9 +26,18 @@ Con respecto al backend:
 
     "npm run dev" : Este script corre el servidor del programa y si escucha por cambios de archivos.
     |--------------------------------------------------------------------------------------------------------------------|
+    Importante: En la raiz de la carpeta de backend "ProyectoDB2/backend" se debe crear el archivo " .env " que son las variables de entorno, estas son importantes para que el backend funcione. Para ser más claro se debe crear el archivo ".env" al mismo nivel de donde esta el ".gitignore".
 
 ]
 Importante: Es necesario tener todo lo del backend para que se pueda correr la aplicación.
+
+Con respecto a la base de datos: 
+[
+    1. Se debe crear la base de datos en postgresql
+    2. El nombre de la base de datos debe ser DB2_Proyecto
+    3. Escriban al grupo o a mi al privado para que les pase el script a ejecutar de la base de datos.
+    4. Una vez ya ejecuten el script, la base de datos ya estara funcionando.
+]
 
 Correr la aplicación una vez que el frontend se comunique con el backend:
 [

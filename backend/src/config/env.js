@@ -14,5 +14,12 @@ export const config = {
   // Aquí podrías añadir otras configuraciones, como el puerto del servidor
    server: {
      port: process.env.PORT || 3000
-   }
+   },
+   jwt: {
+    secret: process.env.JWT_SECRET
+  },
+  email: {
+    apiKey: process.env.SENDGRID_API_KEY,
+    fromEmail: 'otellez@est.ecotec.edu.ec' // El correo que verificaste
+  }
 };
