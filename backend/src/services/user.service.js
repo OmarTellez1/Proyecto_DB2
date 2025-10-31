@@ -3,11 +3,15 @@ import bcrypt from 'bcryptjs';
 
 const UserService = {};
 
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #1
+
 /**
  * Valida, hashea contraseña y crea un usuario.
  * @param {object} userData - Datos del usuario (ej. { nombre: '...', contrasena: 'pass123' }).
  * @returns {object} El usuario creado.
  */
+
 UserService.createUser = async (userData) => {
   const { 
     nombre, 
@@ -54,10 +58,12 @@ UserService.createUser = async (userData) => {
     throw error; // Lanzamos otros errores
   }
 };
+/* ------------------------------------------------------------------------------------------------ */
 
-/**
- * Llama al modelo para obtener todos los usuarios ACTIVOS.
- */
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #2
+//Llama al modelo para obtener todos los usuarios ACTIVOS.
+ 
 UserService.getAllUsers = async () => {
   try {
     // El modelo (findAll) ahora solo devuelve usuarios con estado = true
@@ -67,12 +73,17 @@ UserService.getAllUsers = async () => {
     throw error;
   }
 };
+/* ------------------------------------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #3
 
 /**
  * Llama al modelo para obtener un usuario por su ID.
  * @param {number} id - El ID del usuario.
  * @returns {object} El usuario encontrado (activo o inactivo).
  */
+
 UserService.getUserById = async (id) => {
   try {
     const user = await UserModel.findById(id);
@@ -84,6 +95,10 @@ UserService.getUserById = async (id) => {
     throw error;
   }
 };
+/* ------------------------------------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo#4
 
 /**
  * Valida, hashea (si es necesario) y actualiza un usuario.
@@ -91,6 +106,7 @@ UserService.getUserById = async (id) => {
  * @param {object} updateData - Los datos a actualizar (ej. { nombre: '...', contrasena: 'pass123' }).
  * @returns {object} El usuario actualizado.
  */
+
 UserService.updateUser = async (id, updateData) => {
   try {
     // 1. (Validación) Verificar si el usuario existe
@@ -127,12 +143,16 @@ UserService.updateUser = async (id, updateData) => {
     throw error; // Lanzamos otros errores (ej. "Usuario no encontrado")
   }
 };
+/* ------------------------------------------------------------------------------------------------ */
 
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #5
 
 /**
  * Realiza un BORRADO LÓGICO (soft delete) del usuario.
  * @param {number} id - El ID del usuario a desactivar.
  */
+
 UserService.deleteUser = async (id) => {
   try {
     // 1. (Validación) Verificar si el usuario existe
@@ -156,5 +176,5 @@ UserService.deleteUser = async (id) => {
     throw error; 
   }
 };
-
+/* ------------------------------------------------------------------------------------------------ */
 export default UserService;

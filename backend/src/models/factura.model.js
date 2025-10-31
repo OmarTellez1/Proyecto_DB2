@@ -1,14 +1,24 @@
-// En: backend/src/models/factura.model.js
-// ¡Importante! Este modelo NO importa el pool, recibirá el 'client'
+/**
+ * Modelo para la gestión de Facturas.
+ * Este archivo es un 'híbrido':
+ * 1. Funciones (createFactura, createDetalle) que reciben un 'client'
+ * para ser usadas dentro de transacciones (desde factura.service.js).
+ * 2. Funciones (findCompleteById) que usan el 'pool' global
+ * para consultas simples e independientes.
+ */
 import pool from '../config/db.js';
 const FacturaModel = {};
 
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #1
 /**
- * Crea la cabecera de la factura.
+ * -----Esto son comentarios JSDoc-------
+ * Inserta la cabecera de una nueva factura (ej. total, id_cliente).
+ * Esta función está diseñada para ser ejecutada DENTRO de una transacción.
  * @param {number} idCliente - ID del usuario que compra.
  * @param {number} total - El total calculado de la compra.
- * @param {object} client - La conexión activa de la transacción.
- * @returns {number} El ID de la nueva factura.
+ * @param {object} client - Una conexión (client) activa de PostgreSQL, no el pool.
+ * @returns {number} El ID de la nueva factura creada.
  */
 FacturaModel.createFactura = async (idCliente, total, client) => {
   const query = `
@@ -20,13 +30,18 @@ FacturaModel.createFactura = async (idCliente, total, client) => {
   const result = await client.query(query, values);
   return result.rows[0].id_factura;
 };
+/* ------------------------------------------------------------------------------------------------ */
 
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #2
 /**
- * Inserta un ítem en el detalle de la factura.
+ * -----Esto son comentarios JSDoc-------
+ * Inserta un ítem (producto) en la tabla detalle_factura.
+ * Esta función está diseñada para ser ejecutada DENTRO de una transacción.
  * @param {number} idFactura - El ID devuelto por createFactura.
  * @param {object} item - El ítem del carrito (ej. { id_producto: 2, unidades: 3 }).
  * @param {number} precio - El precio unitario (obtenido de la BD).
- * @param {object} client - La conexión activa de la transacción.
+ * @param {object} client - Una conexión (client) activa de PostgreSQL.
  */
 FacturaModel.createDetalle = async (idFactura, item, precio, client) => {
   const query = `
@@ -36,10 +51,16 @@ FacturaModel.createDetalle = async (idFactura, item, precio, client) => {
   const values = [idFactura, item.id_producto, item.unidades, precio];
   await client.query(query, values);
 };
-// --- NUEVA FUNCIÓN ---
+/* ------------------------------------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #3
 /**
- * Busca una factura completa por su ID, uniendo todas las tablas.
- * Utiliza funciones JSON de PostgreSQL para agrupar los detalles.
+ * -----Esto son comentarios JSDoc-------
+ * Busca una factura completa por su ID (para la vista de Admin).
+ * Esta es una consulta independiente (READ-ONLY) que SÍ usa el pool global.
+ * Une 4 tablas (factura, usuarios, detalle_factura, productos) y agrupa
+ * los resultados en un JSON usando funciones de PostgreSQL.
  * @param {number} idFactura - El ID de la factura a buscar.
  * @returns {object | null} La factura completa o null si no se encuentra.
  */
@@ -87,5 +108,5 @@ FacturaModel.findCompleteById = async (idFactura) => {
   // pool.query devuelve la fila (o undefined si no se encontró)
   return result.rows[0];
 };
-// ---------------------
+/* ------------------------------------------------------------------------------------------------ */
 export default FacturaModel;

@@ -2,20 +2,25 @@ import pool from '../config/db.js';
 
 const ProductModel = {};
 
-/**
- * Función para obtener todos los productos de la base de datos. -- GET -- 
- */
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #1
+//Función para obtener todos los productos de la base de datos. -- GET -- 
 ProductModel.findAll = async () => {
   const result = await pool.query('SELECT * FROM Productos ORDER BY Id_Producto ASC');
   return result.rows;
 };
+/* ------------------------------------------------------------------------------------------------ */
 
-// --- NUEVA FUNCIÓN --- POST --
+/* ------------------------------------------------------------------------------------------------ */
+// Metodo #2
+//Función para insertar un nuevo producto en la base de datos. --- POST --
+
 /**
- * Función para insertar un nuevo producto en la base de datos.
+ * -----Esto son comentarios JSDoc-------
  * @param {object} productData - Datos del producto (nombre_producto, descripcion, etc.)
  * @returns {object} El producto recién creado.
  */
+
 ProductModel.create = async (productData) => {
   const {
     nombre_producto,
@@ -46,13 +51,18 @@ ProductModel.create = async (productData) => {
   // Devolvemos la primera (y única) fila insertada
   return result.rows[0];
 };
-// ---------------------
-// --- NUEVA FUNCIÓN ---GET BY ID ---
+/* ------------------------------------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #3
+// --- Función para buscar un producto por su ID ---GET BY ID ---
+
 /**
- * Función para buscar un producto por su ID.
+ * -----Esto son comentarios JSDoc-------
  * @param {number} id - El ID del producto.
  * @returns {object | null} El producto encontrado o null si no existe.
  */
+
 ProductModel.findById = async (id) => {
   const query = 'SELECT * FROM Productos WHERE Id_Producto = $1';
   const values = [id];
@@ -63,14 +73,20 @@ ProductModel.findById = async (id) => {
   // Si no se encuentra, result.rows estará vacío y esto devolverá undefined (o null)
   return result.rows[0];
 };
-// --- NUEVA FUNCIÓN ---
+/* ------------------------------------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #4
+// --- Función para actualizar un producto por su ID. ---PUT---
+
 /**
- * Función para actualizar un producto por su ID.
+ * -----Esto son comentarios JSDoc-------
  * Permite actualizaciones parciales.
  * @param {number} id - El ID del producto a actualizar.
  * @param {object} productData - Objeto con los campos a actualizar.
  * @returns {object | null} El producto actualizado o null si no se encontró.
  */
+
 ProductModel.update = async (id, productData) => {
   // 1. Obtenemos las claves (campos) del objeto productData
   // Ej: ['nombre_producto', 'precio_unitario']
@@ -111,11 +127,17 @@ ProductModel.update = async (id, productData) => {
   // Devolvemos el producto actualizado
   return result.rows[0];
 };
-// --- NUEVA FUNCIÓN ---
+/* ------------------------------------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #5
+// --- Función para eliminar un producto por su ID. ---DELETE-----
+
 /**
- * Función para eliminar un producto por su ID.
+ * -----Esto son comentarios JSDoc-------
  * @param {number} id - El ID del producto a eliminar.
  */
+
 ProductModel.remove = async (id) => {
   const query = 'DELETE FROM Productos WHERE Id_Producto = $1';
   const values = [id];
@@ -126,13 +148,18 @@ ProductModel.remove = async (id) => {
   
   // No es necesario devolver nada, la acción se confirma si no hay error.
 };
-// -------------------
-// --- NUEVA FUNCIÓN (PARA EL SERVICIO) ---
+/* ------------------------------------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #6
+// --- Busca un producto para facturación y lo bloquea (PARA EL SERVICIO) ---
+
 /**
- * Busca un producto para facturación y ¡LO BLOQUEA!
+ * -----Esto son comentarios JSDoc-------
  * @param {number} id - ID del producto.
  * @param {object} client - La conexión activa de la transacción.
  */
+
 ProductModel.findForBilling = async (id, client) => {
   // "FOR UPDATE" bloquea esta fila hasta que la transacción termine (COMMIT o ROLLBACK)
   // Esto evita que dos personas compren el último ítem al mismo tiempo.
@@ -145,14 +172,19 @@ ProductModel.findForBilling = async (id, client) => {
   const result = await client.query(query, [id]);
   return result.rows[0];
 };
+/* ------------------------------------------------------------------------------------------------ */
 
-// --- NUEVA FUNCIÓN ---
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #7
+// --- Actualiza el stock de un producto. ----PUT----
+
 /**
- * Actualiza el stock de un producto.
+ * -----Esto son comentarios JSDoc-------
  * @param {number} id - ID del producto.
  * @param {number} unidadesCompradas - Cuántas unidades se llevaron.
  * @param {object} client - La conexión activa de la transacción.
  */
+
 ProductModel.updateStock = async (id, unidadesCompradas, client) => {
   const query = `
     UPDATE productos
@@ -162,4 +194,5 @@ ProductModel.updateStock = async (id, unidadesCompradas, client) => {
   const values = [unidadesCompradas, id];
   await client.query(query, values);
 };
+/* ------------------------------------------------------------------------------------------------ */
 export default ProductModel;

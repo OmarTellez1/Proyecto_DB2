@@ -16,9 +16,9 @@ const pool = new Pool({
 // Esto es genial para asegurarnos de que todo funciona al iniciar la app.
 pool.query('SELECT NOW()', (err, res) => {
   if (err) {
-    console.error('❌ Error al conectar con la base de datos:', err.stack);
+    console.error('Error al conectar con la base de datos:', err.stack);
   } else {
-    console.log('🐘 Conexión exitosa a PostgreSQL establecida en:', res.rows[0].now);
+    console.log('Conexión exitosa a PostgreSQL establecida en:', res.rows[0].now);
   }
 });
 

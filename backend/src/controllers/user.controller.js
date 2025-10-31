@@ -1,10 +1,9 @@
 import UserService from '../services/user.service.js';
 
 const UserController = {};
-
-/**
- * Maneja la petición POST para crear un nuevo usuario.
- */
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #1
+//Maneja la petición POST para crear un nuevo usuario.
 UserController.create = async (req, res) => {
   try {
     // 1. Obtenemos los datos del cuerpo (body) de la petición
@@ -34,10 +33,9 @@ UserController.create = async (req, res) => {
     }
   }
 };
-// --- NUEVA FUNCIÓN ---
-/**
- * Maneja la petición GET para obtener todos los usuarios.
- */
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #2
+//Maneja la petición GET para obtener todos los usuarios.
 UserController.getAll = async (req, res) => {
   try {
     // 1. Llamamos al servicio
@@ -52,11 +50,9 @@ UserController.getAll = async (req, res) => {
     res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
-// ---------------------
-// --- NUEVA FUNCIÓN ---
-/**
- * Maneja la petición GET para obtener un usuario por su ID.
- */
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #3
+//Maneja la petición GET para obtener un usuario por su ID.
 UserController.getById = async (req, res) => {
   try {
     // 1. Obtenemos el ID de los parámetros de la URL (ej. /api/usuarios/16)
@@ -81,7 +77,9 @@ UserController.getById = async (req, res) => {
     }
   }
 };
-// ---------------------
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #4
+//Maneja la petición PUT para actualizar la información de los usuarios
 UserController.update = async (req, res) => {
   try {
     // 1. Obtenemos el ID de los parámetros
@@ -110,11 +108,9 @@ UserController.update = async (req, res) => {
     }
   }
 };
-// ---------------------
-// --- FUNCIÓN 'remove' (ACTUALIZADA/AÑADIDA) ---
-/**
- * Maneja la petición DELETE para "borrar lógicamente" (desactivar) un usuario.
- */
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #5
+//Maneja la petición DELETE para "borrar lógicamente" (desactivar) un usuario.
 UserController.remove = async (req, res) => {
   try {
     // 1. Obtenemos el ID de los parámetros
@@ -142,5 +138,5 @@ UserController.remove = async (req, res) => {
     }
   }
 };
-// ---------------------
+/* ------------------------------------------------------------------------------------------------ */
 export default UserController;

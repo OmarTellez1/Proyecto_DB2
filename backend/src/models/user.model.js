@@ -2,11 +2,16 @@ import pool from '../config/db.js';
 
 const UserModel = {};
 
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #1
+//Función para insertar un nuevo usuario en la base de datos.
+
 /**
- * Función para insertar un nuevo usuario en la base de datos.
+ * ----Comentarios JSdocs----
  * @param {object} userData - Datos del usuario (con contraseña hasheada).
  * @returns {object} El usuario recién creado (sin la contraseña).
  */
+
 UserModel.create = async (userData) => {
   const {
     nombre,
@@ -38,29 +43,37 @@ UserModel.create = async (userData) => {
   const result = await pool.query(query, values);
   return result.rows[0];
 };
+/* ------------------------------------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #2
+//Función para obtener TODOS los usuarios ACTIVOS.
 
 /**
- * Función para obtener TODOS los usuarios ACTIVOS.
  * @returns {Array} Lista de usuarios activos.
  */
+
 UserModel.findAll = async () => {
-  // ¡MODIFICADO! Añadimos WHERE estado = true
   const query = `
     SELECT id_usuario, nombre, apellido, cedula, celular, correo_electronico, rol, estado 
     FROM usuarios 
     WHERE estado = true
     ORDER BY id_usuario ASC;
   `;
-
   const result = await pool.query(query);
   return result.rows;
 };
+/* ------------------------------------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #3
+//Función para buscar un usuario por su ID (esté activo o no).
 
 /**
- * Función para buscar un usuario por su ID (esté activo o no).
  * @param {number} id - El ID del usuario.
  * @returns {object | null} El usuario encontrado o null si no existe.
  */
+
 UserModel.findById = async (id) => {
   // Seleccionamos campos seguros (incluyendo estado)
   const query = `
@@ -73,13 +86,18 @@ UserModel.findById = async (id) => {
   const result = await pool.query(query, values);
   return result.rows[0];
 };
+/* ------------------------------------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #4
+//Función para actualizar un usuario por su ID (actualización dinámica).
 
 /**
- * Función para actualizar un usuario por su ID (actualización dinámica).
  * @param {number} id - El ID del usuario a actualizar.
- *D @param {object} dataToUpdate - Objeto con los campos a actualizar (ej. { rol: 'Admin', estado: false }).
+ *@param {object} dataToUpdate - Objeto con los campos a actualizar (ej. { rol: 'Admin', estado: false }).
  * @returns {object | null} El usuario actualizado (sin contraseña).
  */
+
 UserModel.update = async (id, dataToUpdate) => {
   // 1. Obtenemos las claves (campos) del objeto
   // Ej: ['rol', 'estado']
@@ -115,16 +133,17 @@ UserModel.update = async (id, dataToUpdate) => {
   const result = await pool.query(query, values);
   return result.rows[0];
 };
+/* ------------------------------------------------------------------------------------------------ */
 
-// La función 'remove' (borrado físico) se elimina intencionalmente.
-
-// --- NUEVA FUNCIÓN ---
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #5
 /**
  * Busca un usuario por su cédula.
  * ¡Esta es la única función que DEBE seleccionar la contraseña y el estado!
  * @param {string} cedula - La cédula del usuario.
  * @returns {object | null} El usuario completo (incluyendo hash de contraseña).
  */
+
 UserModel.findByCedula = async (cedula) => {
   // Seleccionamos todos los campos necesarios para la autenticación
   const query = `
@@ -139,13 +158,18 @@ UserModel.findByCedula = async (cedula) => {
   // Devolvemos el usuario completo
   return result.rows[0];
 };
-// --- FUNCIÓN MODIFICADA ---
+/* ------------------------------------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #6
+//Busca los detalles de un usuario por su ID para el correo de facturación.
+
 /**
- * Busca los detalles de un usuario por su ID para el correo de facturación.
  * @param {number} id - El ID del usuario.
  * @param {object} client - La conexión activa de la transacción.
  * @returns {object} { nombre, apellido, cedula, celular, correo_electronico }
  */
+
 UserModel.findDetailsForEmail = async (id, client) => {
   // Añadimos apellido, cedula y celular a la consulta
   const query = `
@@ -156,5 +180,5 @@ UserModel.findDetailsForEmail = async (id, client) => {
   const result = await client.query(query, [id]);
   return result.rows[0];
 };
-// ---------------------
+/* ------------------------------------------------------------------------------------------------ */
 export default UserModel;

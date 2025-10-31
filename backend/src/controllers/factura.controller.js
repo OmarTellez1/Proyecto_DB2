@@ -2,10 +2,9 @@
 import FacturaService from '../services/factura.service.js';
 
 const FacturaController = {};
-
-/**
- * Maneja la petición POST para crear una nueva factura (compra).
- */
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #1
+//Maneja la petición POST para crear una nueva factura (compra).
 FacturaController.create = async (req, res) => {
   try {
     // 1. Obtenemos el carrito del body
@@ -41,11 +40,11 @@ FacturaController.create = async (req, res) => {
     }
   }
 };
-// --- NUEVA FUNCIÓN ---
-/**
- * Maneja la petición GET para obtener una factura por su ID.
- * Solo accesible para Admins.
- */
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #2
+//Maneja la petición GET para obtener una factura por su ID.
+//Solo accesible para Admins.
+ 
 FacturaController.getById = async (req, res) => {
   try {
     // 1. Verificación de Rol (¡Importante!)
@@ -73,5 +72,5 @@ FacturaController.getById = async (req, res) => {
     }
   }
 };
-// ---------------------
+/* ------------------------------------------------------------------------------------------------ */
 export default FacturaController;

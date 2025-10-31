@@ -2,9 +2,10 @@ import ProductModel from '../models/product.model.js';
 
 const ProductService = {};
 
-/**
- * Llama al modelo para obtener todos los productos.
- */
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #1
+//Llama al modelo para obtener todos los productos. ----GET----
+
 ProductService.getAllProducts = async () => {
   try {
     const products = await ProductModel.findAll();
@@ -13,13 +14,18 @@ ProductService.getAllProducts = async () => {
     throw error;
   }
 };
+/* ------------------------------------------------------------------------------------------------ */
 
-// --- NUEVA FUNCIÓN ---
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #2
+//Valida y llama al modelo para crear un nuevo producto. ----POST----
+
 /**
- * Valida y llama al modelo para crear un nuevo producto.
+ * ----Esto son comentarios JSDocs----
  * @param {object} productData - Datos del producto desde el controlador.
  * @returns {object} El producto creado.
  */
+
 ProductService.createProduct = async (productData) => {
   // Lógica de Negocio/Validación (Ejemplo)
   // Basado en tu script SQL, Nombre_Producto y Precio_Unitario son NOT NULL
@@ -41,13 +47,18 @@ ProductService.createProduct = async (productData) => {
     throw error;
   }
 };
-// ---------------------
-// --- NUEVA FUNCIÓN -- Obtener producto por ID-
+/* ------------------------------------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #3
+//Obtener producto por ID ----GET BY ID ----
+
 /**
  * Llama al modelo para obtener un producto por su ID.
  * @param {number} id - El ID del producto.
  * @returns {object} El producto encontrado.
  */
+
 ProductService.getProductById = async (id) => {
   try {
     const product = await ProductModel.findById(id);
@@ -62,15 +73,18 @@ ProductService.getProductById = async (id) => {
     throw error;
   }
 };
-// ---------------------
+/* ------------------------------------------------------------------------------------------------ */
 
-// --- NUEVA FUNCIÓN ---
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #4
+//Valida y llama al modelo para actualizar un producto. ----PUT----
+
 /**
- * Valida y llama al modelo para actualizar un producto.
  * @param {number} id - El ID del producto.
  * @param {object} productData - Los datos a actualizar.
  * @returns {object} El producto actualizado.
  */
+
 ProductService.updateProduct = async (id, productData) => {
   try {
     // 1. (Validación CRUCIAL) Verificar si el producto existe
@@ -94,12 +108,16 @@ ProductService.updateProduct = async (id, productData) => {
     throw error;
   }
 };
-// ---------------------
-// --- NUEVA FUNCIÓN ---
+/* ------------------------------------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #5
+// Valida y llama al modelo para eliminar un producto. ----DELETE----
+
 /**
- * Valida y llama al modelo para eliminar un producto.
  * @param {number} id - El ID del producto.
  */
+
 ProductService.deleteProduct = async (id) => {
   try {
     // 1. (Validación CRUCIAL) Verificar si el producto existe
@@ -115,5 +133,5 @@ ProductService.deleteProduct = async (id) => {
     throw error;
   }
 };
-// ---------------------
+/* ------------------------------------------------------------------------------------------------ */
 export default ProductService;
