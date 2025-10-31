@@ -1,10 +1,10 @@
 import AuthService from '../services/auth.service.js';
 
+//un objeto vacío que usaremos como un "contenedor" para crear nuevos metodos que pertenecen a ese objeto
 const AuthController = {};
-
-/**
- * Maneja la petición POST para el login.
- */
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #1
+//Maneja la petición POST para el login.
 AuthController.login = async (req, res) => {
   try {
     // 1. Obtenemos cédula y contraseña del body (minúsculas)
@@ -33,5 +33,5 @@ AuthController.login = async (req, res) => {
     }
   }
 };
-
+/* ------------------------------------------------------------------------------------------------ */
 export default AuthController;

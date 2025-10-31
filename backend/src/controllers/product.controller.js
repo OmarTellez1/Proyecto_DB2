@@ -2,9 +2,9 @@ import ProductService from '../services/product.service.js';
 
 const ProductController = {};
 
-/**
- * Maneja la petición GET para obtener todos los productos.
- */
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #1
+//Maneja la petición GET para obtener todos los productos.
 ProductController.getAll = async (req, res) => {
   try {
     const products = await ProductService.getAllProducts();
@@ -14,11 +14,9 @@ ProductController.getAll = async (req, res) => {
     res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
-
-// --- NUEVA FUNCIÓN ---
-/**
- * Maneja la petición POST para crear un nuevo producto.
- */
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #2
+//Maneja la petición POST para crear un nuevo producto.
 ProductController.create = async (req, res) => {
   try {
     // 1. Obtenemos los datos del cuerpo (body) de la petición
@@ -44,11 +42,9 @@ ProductController.create = async (req, res) => {
     }
   }
 };
-// ---------------------
-// --- NUEVA FUNCIÓN ---
-/**
- * Maneja la petición GET para obtener un producto por su ID.
- */
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #3
+//Maneja la petición GET para obtener un producto por su ID.
 ProductController.getById = async (req, res) => {
   try {
     // 1. Obtenemos el ID de los parámetros de la URL (ej. /api/productos/5)
@@ -73,10 +69,10 @@ ProductController.getById = async (req, res) => {
     }
   }
 };
-// --- NUEVA FUNCIÓN ---
-/**
- * Maneja la petición PUT para actualizar un producto por su ID.
- */
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #4
+//Maneja la petición PUT para actualizar un producto por su ID.
+ 
 ProductController.update = async (req, res) => {
   try {
     // 1. Obtenemos el ID de los parámetros
@@ -103,11 +99,10 @@ ProductController.update = async (req, res) => {
     }
   }
 };
-// ---------------------
-// --- NUEVA FUNCIÓN ---
-/**
- * Maneja la petición DELETE para eliminar un producto por su ID.
- */
+/* ------------------------------------------------------------------------------------------------ */
+// Metodo #5
+//Maneja la petición DELETE para eliminar un producto por su ID.
+ 
 ProductController.remove = async (req, res) => {
   try {
     // 1. Obtenemos el ID de los parámetros
@@ -131,5 +126,5 @@ ProductController.remove = async (req, res) => {
     }
   }
 };
-// ---------------------
+/* ------------------------------------------------------------------------------------------------ */
 export default ProductController;
