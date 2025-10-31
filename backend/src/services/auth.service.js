@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import { config } from '../config/env.js'; // Importamos el secreto
 
 const AuthService = {};
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #1
 
 /**
  * Lógica de inicio de sesión.
@@ -11,6 +13,7 @@ const AuthService = {};
  * @param {string} contrasena - Contraseña en texto plano.
  * @returns {object} { token, usuario }
  */
+
 AuthService.login = async (cedula, contrasena) => {
   // 1. Buscar al usuario por su cédula
   const usuario = await UserModel.findByCedula(cedula);
@@ -56,5 +59,5 @@ AuthService.login = async (cedula, contrasena) => {
   
   return { token, usuario: usuarioRespuesta };
 };
-
+/* ------------------------------------------------------------------------------------------------ */
 export default AuthService;

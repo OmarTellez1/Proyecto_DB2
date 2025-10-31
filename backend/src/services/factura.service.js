@@ -1,17 +1,17 @@
-// En: backend/src/services/factura.service.js
-
 import pool from '../config/db.js';
 import ProductModel from '../models/product.model.js';
 import FacturaModel from '../models/factura.model.js';
 import UserModel from '../models/user.model.js';
 import { config } from '../config/env.js';
-// --- 1. IMPORTACIÓN ACTUALIZADA ---
+
 // Importamos el objeto oficial de SendGrid
 import sgMail from '../config/mailer.js'; 
 // ----------------------------------
 
 const FacturaService = {};
-//----------Inicio de funcion FacturaService.createFactura-----------
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #1
+//En esta funcion creamos la factura
 FacturaService.createFactura = async (idCliente, items) => {
   const client = await pool.connect();
 
@@ -82,7 +82,7 @@ FacturaService.createFactura = async (idCliente, items) => {
 
   try {
     
-// --- 'htmlCorreo' ACTUALIZADO ---
+// --- 'htmlCorreo' ---
     const htmlCorreo = `
       <div style="font-family: Arial, sans-serif; line-height: 1.6; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px;">
         
@@ -125,7 +125,7 @@ FacturaService.createFactura = async (idCliente, items) => {
         </p>
       </div>
     `;
-    // --- FIN DE LA ACTUALIZACIÓN ---
+    // --- FIN html correo ---
 
     // Preparamos el 'mensaje' que pide @sendgrid/mail
     const msg = {
@@ -164,13 +164,17 @@ FacturaService.createFactura = async (idCliente, items) => {
   };
 };
 //----------Fin de funcion FacturaService.createFactura-----------
+/* ------------------------------------------------------------------------------------------------ */
 
-// --- NUEVA FUNCIÓN ---
+/* ------------------------------------------------------------------------------------------------ */
+//Metodo #2
+//Obtiene los detalles completos de una factura por su ID.
+
 /**
- * Obtiene los detalles completos de una factura por su ID.
  * @param {number} idFactura - El ID de la factura.
  * @returns {object} La factura completa.
  */
+
 FacturaService.getFacturaDetails = async (idFactura) => {
   try {
     const factura = await FacturaModel.findCompleteById(idFactura);
@@ -190,5 +194,5 @@ FacturaService.getFacturaDetails = async (idFactura) => {
     throw error;
   }
 };
-// ---------------------
+/* ------------------------------------------------------------------------------------------------ */
 export default FacturaService;
