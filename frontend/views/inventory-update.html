@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Actualizar inventario</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/inventory-update.css" />
+</head>
+<body class="admin">
+  <aside class="sidebar"></aside>
+  <main class="main">
+    <header class="header">
+      <h1>Actualizar inventario</h1>
+    </header>
+
+    <section class="tools">
+      <input id="q" placeholder="Buscar por código o nombre" />
+      <button id="reload" class="btn">Recargar</button>
+    </section>
+
+    <section>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Código</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div id="empty" class="empty" hidden>No hay productos</div>
+    </section>
+  </main>
+
+  <script type="module" src="/js/sidebar.js"></script>
+  <script type="module" src="/js/inventory-update.js"></script>
+</body>
+</html>

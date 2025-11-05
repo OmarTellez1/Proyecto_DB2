@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Catálogo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/catalog.css" />
+</head>
+<body class="catalog">
+  <aside class="sidebar"></aside>
+  <main class="main">
+    <header class="header"><h1>Catálogo</h1></header>
+    <section id="catalog-grid" class="grid"></section>
+    <div id="empty" class="empty" hidden>No hay productos disponibles</div>
+  </main>
+
+  <button id="btn-cart" class="cart-btn" title="Ir a facturación" hidden>
+    <span class="count">0</span>
+    <span class="total">$0.00</span>
+  </button>
+  <!-- NUEVO: Vaciar carrito -->
+  <button id="btn-cart-clear" class="cart-clear" title="Vaciar carrito" hidden>🗑 Vaciar</button>
+
+  <script type="module" src="/js/sidebar.js"></script>
+  <script type="module" src="/js/catalog.js"></script>
+</body>
+</html>

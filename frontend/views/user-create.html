@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Agregar usuario</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/user.css" />
+</head>
+<body class="admin">
+  <aside class="sidebar">
+    <div class="brand">Vista administrador</div>
+    <nav class="nav">
+      <a href="/catalog">Catalogo</a>
+      <a href="/admin/inventory/update">Actualizar inventario</a>
+      <a href="/admin/inventory">Ver inventario</a>
+      <a href="/billing">Ver facturas</a>
+      <a class="active" href="/admin/users/new">Agregar usuario</a>
+    </nav>
+    <a class="logout" href="/login">Cerrar sesión</a>
+  </aside>
+
+  <main class="main">
+    <header class="header"><h1>Registro de nuevo usuario</h1></header>
+
+    <section class="card">
+      <form id="form" novalidate>
+        <div class="row">
+          <label>Nombre
+            <input id="firstName" type="text" required maxlength="60" />
+          </label>
+          <label>Apellido
+            <input id="lastName" type="text" required maxlength="60" />
+          </label>
+        </div>
+
+        <label>RUC o CI
+          <input id="ciOrRuc" type="text" inputmode="numeric" required maxlength="13" />
+        </label>
+
+        <label>Celular
+          <input id="phone" type="tel" inputmode="numeric" required maxlength="10" />
+        </label>
+
+        <label>E-mail
+          <input id="email" type="email" required maxlength="120" />
+        </label>
+
+        <label>Contraseña (opcional)
+          <input id="password" type="password" minlength="6" />
+        </label>
+
+        <div id="error" class="error" hidden></div>
+
+        <div class="actions">
+          <a class="btn ghost" href="/admin/inventory">Cancelar</a>
+          <button id="btnSubmit" class="btn primary" type="submit">Confirmar</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script type="module" src="/js/sidebar.js"></script>
+  <script type="module" src="/js/user-create.js"></script>
+</body>
+</html>

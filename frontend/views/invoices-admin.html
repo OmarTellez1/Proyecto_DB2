@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ver facturas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/invoices-admin.css" />
+</head>
+<body class="admin">
+  <aside class="sidebar"></aside>
+  <main class="main">
+    <header class="header"><h1>VER FACTURAS</h1></header>
+    <section class="tools">
+      <input id="q" class="search" placeholder="Ingrese ID o cliente" />
+      <button id="reload" class="btn">Buscar</button>
+    </section>
+    <section id="list" class="list"></section>
+    <div id="empty" class="empty" hidden>No hay facturas</div>
+  </main>
+
+  <script type="module" src="/js/sidebar.js"></script>
+  <script type="module" src="/js/invoices-admin.js"></script>
+  <script type="module" src="/js/guard-admin.js"></script>
+</body>
+</html>

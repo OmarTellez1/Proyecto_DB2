@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Usuarios</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/user-list.css" />
+</head>
+<body class="admin">
+  <aside class="sidebar"></aside>
+  <main class="main">
+    <header class="header">
+      <h1>Usuarios</h1>
+      <div class="actions">
+        <input id="q" class="search" placeholder="Buscar por nombre, cédula o correo" />
+        <a class="btn" href="/admin/users/new">Agregar usuario</a>
+      </div>
+    </header>
+    <section class="card">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th><th>Nombre</th><th>Apellido</th><th>Cédula</th>
+            <th>Celular</th><th>Correo</th><th>Rol</th><th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div id="empty" class="empty" hidden>No hay usuarios</div>
+    </section>
+  </main>
+
+  <script type="module" src="/js/sidebar.js"></script>
+  <script type="module" src="/js/user-list.js"></script>
+</body>
+</html>
