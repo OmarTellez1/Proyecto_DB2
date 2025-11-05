@@ -8,24 +8,49 @@ document.addEventListener('DOMContentLoaded', () => {
   const usuarioStr = localStorage.getItem('usuario');
   
   // 1. Guardia de Seguridad:
-  // Verificamos si el usuario es Admin. Si no, lo expulsamos.
-  if (!token || !usuarioStr) {
-    // Si no hay token o usuario, redirige a login
+  if (!token || !usuarioStr || JSON.parse(usuarioStr).rol !== 'Admin') {
+    alert('Acceso denegado.');
     window.location.href = 'login.html';
-    return; // Detenemos la ejecución
-  }
-  
-  const usuario = JSON.parse(usuarioStr);
-  
-  if (usuario.rol !== 'Admin') {
-    // Si el rol no es Admin, redirige a la tienda (o donde sea)
-    alert('Acceso denegado. No tienes permisos de administrador.');
-    window.location.href = 'catalog.html';
-    return; // Detenemos la ejecución
+    return;
   }
 
-  // Si llegamos aquí, el usuario es un Admin. Procedemos a cargar los datos.
+  // 2. Cargamos los usuarios
   fetchUsers(token);
+
+  // 3. Manejador de Clics para 'Editar' y 'Desactivar'
+  const tbody = document.getElementById('tbody');
+  tbody.addEventListener('click', async (e) => {
+    
+    // --- LÓGICA DE DESACTIVAR (Ya existe) ---
+    if (e.target.classList.contains('btn-delete')) {
+      const id = e.target.dataset.id; 
+      
+      if (confirm(`¿Estás seguro de que quieres desactivar al usuario con ID ${id}?`)) {
+        try {
+          await deleteUser(id, token);
+          e.target.closest('tr').remove();
+          
+          if (tbody.rows.length === 0) {
+            document.getElementById('empty').hidden = false;
+          }
+        } catch (error) {
+          alert(error.message); 
+        }
+      }
+    }
+
+    // --- ¡NUEVO! LÓGICA DE EDITAR ---
+    if (e.target.classList.contains('btn-edit')) {
+      const id = e.target.dataset.id; // Obtenemos el ID del botón
+
+      // Redirigimos al navegador a la página de edición,
+      // pasando el ID como un "parámetro de consulta" (query param)
+      window.location.href = `user-edit.html?id=${id}`;
+    }
+    // --- FIN DE LO NUEVO ---
+
+  });
+
 });
 
 /**
@@ -33,16 +58,16 @@ document.addEventListener('DOMContentLoaded', () => {
  * y luego llama a la función para renderizar la tabla.
  */
 async function fetchUsers(token) {
+  // ... (Esta función no cambia) ...
   try {
     const respuesta = await fetch('http://localhost:3000/api/usuarios', {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${token}` // ¡Clave de seguridad!
+        'Authorization': `Bearer ${token}`
       }
     });
 
     if (!respuesta.ok) {
-      // Si el token expiró o algo salió mal
       throw new Error('Error al obtener los usuarios. Código: ' + respuesta.status);
     }
 
@@ -52,7 +77,7 @@ async function fetchUsers(token) {
   } catch (error) {
     console.error('Error en fetchUsers:', error.message);
     alert('No se pudieron cargar los usuarios. ¿Tu token expiró?');
-    window.location.href = 'login.html'; // Enviar a login si falla
+    window.location.href = 'login.html';
   }
 }
 
@@ -61,22 +86,18 @@ async function fetchUsers(token) {
  * en el <tbody> con id="tbody".
  */
 function renderUserTable(usuarios) {
+  // ... (Esta función no cambia, ya que los botones ya están incluidos) ...
   const tbody = document.getElementById('tbody');
   const emptyMessage = document.getElementById('empty');
-
-  // Limpiamos cualquier contenido previo
   tbody.innerHTML = '';
 
-  // 1. Verificamos si la respuesta está vacía
   if (usuarios.length === 0) {
-    emptyMessage.hidden = false; // Mostramos el mensaje "No hay usuarios"
+    emptyMessage.hidden = false;
     return;
   }
 
-  // 2. Si hay datos, ocultamos el mensaje de vacío
   emptyMessage.hidden = true;
 
-  // 3. Creamos una fila (<tr>) por cada usuario
   usuarios.forEach(user => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
@@ -88,10 +109,32 @@ function renderUserTable(usuarios) {
       <td>${user.correo_electronico}</td>
       <td>${user.rol}</td>
       <td>${user.estado ? 'Activo' : 'Inactivo'}</td>
+      <td>
+        <button class="btn-edit" data-id="${user.id_usuario}">Editar</button>
+        <button class="btn-delete" data-id="${user.id_usuario}">Desactivar</button>
+      </td>
     `;
-    // (Opcional) Aquí puedes añadir botones de Editar/Borrar
-    // tr.innerHTML += '<td><button>Editar</button></td>';
-
     tbody.appendChild(tr);
   });
+}
+
+/**
+ * Llama a la API 'DELETE /api/usuarios/:id' para el borrado lógico.
+ */
+async function deleteUser(id, token) {
+  // ... (Esta función no cambia) ...
+  const respuesta = await fetch(`http://localhost:3000/api/usuarios/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  const data = await respuesta.json();
+
+  if (!respuesta.ok) {
+    throw new Error(data.message);
+  }
+
+  return data;
 }
