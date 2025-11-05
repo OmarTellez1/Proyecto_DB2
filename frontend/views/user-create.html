@@ -46,19 +46,27 @@
           <input id="email" type="email" required maxlength="120" />
         </label>
 
-        <label>Contraseña (opcional)
-          <input id="password" type="password" minlength="6" />
-        </label>
+        <label>Rol
+          <select id="rol" required>
+            <option value="">Seleccione un rol...</option>
+            <option value="Cliente">Cliente</option>
+            <option value="Admin">Admin</option>
+          </select>
+        </label>
+
+        <label>Contraseña (Requerida)
+          <input id="password" type="password" required minlength="6" />
+        </label>
 
         <div id="error" class="error" hidden></div>
 
         <div class="actions">
-          <a class="btn ghost" href="/admin/inventory">Cancelar</a>
+          <a class="btn ghost" href="user-list.html">Cancelar</a>
           <button id="btnSubmit" class="btn primary" type="submit">Confirmar</button>
         </div>
       </form>
     </section>
   </main>
-
+<script src="../javascript/user-create.js"></script>
 </body>
 </html>
