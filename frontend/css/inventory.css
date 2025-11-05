@@ -1,0 +1,25 @@
+:root{
+  --bg:#f3fbfc; --panel:#fff; --border:#d1d5db; --text:#0f172a; --muted:#6b7280;
+  --radius:16px; --shadow:0 8px 24px rgba(0,0,0,.10);
+  --sp4:16px; --sp6:24px; --sp8:32px;
+  --font:"Segoe UI", ui-sans-serif, system-ui, -apple-system, Roboto, Arial, sans-serif;
+}
+*{box-sizing:border-box} body.inv{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:var(--font);display:grid;grid-template-columns:240px 1fr;}
+.sidebar{border-right:1px solid var(--border);padding:var(--sp6);display:flex;flex-direction:column;gap:12px}
+.brand{font-weight:700;margin-bottom:8px}
+.nav a{display:block;padding:8px 10px;border-radius:10px;color:#111;background:#eef6f7;margin-bottom:8px}
+.nav a.active{background:#dff3f8;border:1px solid #cdebf3}
+.logout{margin-top:auto;border:1px solid var(--border);background:#fff;border-radius:10px;padding:8px 10px;cursor:pointer}
+.header{display:flex;align-items:center;justify-content:center;padding:var(--sp6)}
+.main{padding:0 var(--sp6) var(--sp8)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--sp6)}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:var(--sp6);display:flex;flex-direction:column;gap:10px}
+.thumb{height:120px;border:1px dashed #cbd5e1;border-radius:12px;background:#e6f4f7;display:grid;place-items:center;color:var(--muted)}
+.name{margin:0;font-size:16px}
+.desc{margin:0;color:var(--muted);font-size:13px;min-height:34px}
+.label{color:#111;font-weight:600}
+.actions{display:flex;align-items:center;gap:10px}
+.stock{width:90px;text-align:center;padding:8px;border:1px solid var(--border);border-radius:10px;background:#fff}
+.icon{width:36px;height:36px;border:1px solid var(--border);border-radius:10px;background:#f8fafc;cursor:pointer;display:grid;place-items:center}
+.icon:hover{background:#eef2f7}
+@media (max-width: 900px){ body.inv{grid-template-columns:1fr} .sidebar{position:sticky;top:0;flex-direction:row;align-items:center;gap:12px} .logout{margin-top:0}}

@@ -14,7 +14,7 @@ router.get('/:id', authMiddleware,UserController.getById);
 
 // --- NUEVA RUTA ---
 // PUT /api/usuarios/:id
-router.put('/:id',UserController.update);
+router.put('/:id',authMiddleware,UserController.update);
 // -----------------
 
 
