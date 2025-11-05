@@ -11,12 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const token = localStorage.getItem('token');
   const usuarioStr = localStorage.getItem('usuario');
 
-  // --- 2. GUARDIA DE SEGURIDAD (SOLO ADMIN) ---
-  if (!token || !usuarioStr || JSON.parse(usuarioStr).rol !== 'Admin') {
-    alert('Acceso denegado. Debes ser administrador.');
-    window.location.href = 'login.html';
-    return; // Detenemos la ejecución
-  }
+  //Aqui solia estar el guardia de seguridad que ahora se encuentra en admin-layout.js como 2.
 
   // --- 3. OBTENER ID DEL PRODUCTO DE LA URL ---
   const urlParams = new URLSearchParams(window.location.search);

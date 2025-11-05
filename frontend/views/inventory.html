@@ -8,7 +8,17 @@
   <link rel="stylesheet" href="../css/layout.css" />
 </head>
 <body class="admin">
-  <aside class="sidebar"></aside>
+   <aside class="sidebar">
+    <div class="brand">Vista administrador</div>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="user-create.html">Crear Usuario</a>
+      <a href="user-list.html">Ver/Modificar Usuarios</a>
+      <a class="active"href="inventory.html">Ver Inventario</a>
+      <a href="invoices-admin.html">Ver Facturas</a>  
+    </nav>
+    <a id="logout-button" class="logout" href="#">Cerrar sesión</a>
+  </aside>
   <main class="main">
     <header class="header"><h1>VER INVENTARIO</h1></header>
     <section id="grid" class="grid"></section>
@@ -32,6 +42,7 @@
       </div>
     </article>
   </template>
+  <script src="../javascript/admin-layout.js"></script>
 <script src="../javascript/inventory.js"></script>
 </body>
 </html>

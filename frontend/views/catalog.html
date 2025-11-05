@@ -8,7 +8,13 @@
   <link rel="stylesheet" href="../css/catalog.css" />
 </head>
 <body class="catalog">
-  <aside class="sidebar"></aside>
+   <aside class="sidebar">
+    <div class="brand">Vista Cliente</div>
+    <nav class="nav">
+      <a class="active" href="catalog.html">Productos</a> 
+    </nav>
+    <a id="logout-button" class="logout" href="#">Cerrar sesión</a>
+  </aside>
   <main class="main">
     <header class="header"><h1>Catálogo</h1></header>
     <section id="catalog-grid" class="grid"></section>
@@ -21,7 +27,7 @@
   </button>
   <!-- NUEVO: Vaciar carrito -->
   <button id="btn-cart-clear" class="cart-clear" title="Vaciar carrito" hidden>🗑 Vaciar</button>
-
+<script src="../javascript/client-layout.js"></script>
 <script src="../javascript/catalog.js"></script>
 </body>
 </html>

@@ -7,12 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('token');
   const usuarioStr = localStorage.getItem('usuario');
   
-  // 1. Guardia de Seguridad:
-  if (!token || !usuarioStr || JSON.parse(usuarioStr).rol !== 'Admin') {
-    alert('Acceso denegado.');
-    window.location.href = 'login.html';
-    return;
-  }
+  //Aqui solia estar el guardia de seguridad que ahora se encuentra en admin-layout.js como 1.
+ 
 
   // 2. Cargamos los usuarios
   fetchUsers(token);

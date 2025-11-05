@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function redirigirPorRol(rol) {
     if (rol === 'Admin') {
       // Si es Admin, lo enviamos a la lista de usuarios
-      window.location.href = 'user-list.html'; // <-- RUTA CORREGIDA
+      window.location.href = 'index.html'; // <-- RUTA CORREGIDA
     } else if (rol === 'Cliente') {
       // Si es Cliente, lo enviamos al catálogo de productos
       window.location.href = 'catalog.html'; // <-- RUTA CORREGIDA

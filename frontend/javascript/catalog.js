@@ -12,19 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // (Variable 'cart') Obtenemos el carrito de localStorage si existe, o creamos uno vacío.
   let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-  // --- 2. GUARDIA DE SEGURIDAD (SOLO CLIENTES) ---
-  if (!token || !usuarioStr) {
-    alert('Por favor, inicia sesión para ver el catálogo.');
-    window.location.href = 'login.html';
-    return;
-  }
+  // --- 2. GUARDIA DE SEGURIDAD (SOLO CLIENTES) --- Fue borrado y ahora esta en client-layout.js
   
-  const usuario = JSON.parse(usuarioStr);
-  if (usuario.rol !== 'Cliente') {
-    alert('Acceso denegado. Esta vista es solo para clientes.');
-    window.location.href = 'login.html'; // Lo sacamos
-    return;
-  }
 
   // --- 3. SELECCIÓN DE ELEMENTOS DEL DOM ---
   const catalogGrid = document.getElementById('catalog-grid');

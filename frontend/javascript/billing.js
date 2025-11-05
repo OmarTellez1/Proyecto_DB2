@@ -11,19 +11,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   const usuarioStr = localStorage.getItem('usuario');
   let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-  // Guardia de Seguridad:
-  if (!token || !usuarioStr) {
-    alert('Por favor, inicia sesión para continuar.');
-    window.location.href = 'login.html';
+  // Guardia de Seguridad: ahora es client-layout.js
+  // El layout ya verificó la seguridad, pero este script 
+  // necesita definir la variable 'usuario' para usarla.
+  if (!usuarioStr) {
+    // Si algo falló y no hay usuario, nos detenemos.
+    console.error("Error: No se encontró 'usuario' en localStorage.");
     return;
   }
-  
   const usuario = JSON.parse(usuarioStr);
-  if (usuario.rol !== 'Cliente') {
-    alert('Acceso denegado. Esta página es solo para clientes.');
-    window.location.href = 'catalog.html'; // Lo mandamos al catálogo (o login)
-    return;
-  }
 
   // Guardia de Carrito:
   if (cart.length === 0) {

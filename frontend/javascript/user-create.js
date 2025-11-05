@@ -4,17 +4,11 @@
  */
 document.addEventListener('DOMContentLoaded', () => {
 
-  // 1. Guardia de Seguridad:
+  
   // (Esta es la misma lógica de 'user-list.js' para proteger la página)
   const token = localStorage.getItem('token');
   const usuarioStr = localStorage.getItem('usuario');
-  
-  if (!token || !usuarioStr || JSON.parse(usuarioStr).rol !== 'Admin') {
-    // Si no es Admin, lo expulsamos al login
-    alert('Acceso denegado.');
-    window.location.href = 'login.html'; 
-    return; // Detenemos la ejecución
-  }
+  //Aqui solia estar el guardia de seguridad que ahora se encuentra en admin-layout.js como 1.
 
   // 2. Seleccionamos los elementos del DOM (de user-create.html)
   const userForm = document.getElementById('form');
