@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Editar usuario</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/user.css" />
+</head>
+<body class="admin">
+ <aside class="sidebar">
+    <div class="brand">Vista administrador</div>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a  href="user-create.html">Crear Usuario</a>
+      <a class="active" href="user-list.html">Ver/Modificar Usuarios</a>
+ <a href="inventory.html">Ver Inventario</a>
+ <a href="invoices-admin.html">Ver Facturas</a>  
+    </nav>
+    <a id="logout-button" class="logout" href="#">Cerrar sesión</a>
+  </aside>
+
+  <main class="main">
+    <header class="header"><h1>Editar usuario</h1></header>
+
+    <section class="card">
+      <form id="form" novalidate>
+        <div class="row">
+          <label>Nombre
+            <input id="firstName" type="text" required maxlength="60" />
+          </label>
+          <label>Apellido
+            <input id="lastName" type="text" required maxlength="60" />
+          </label>
+        </div>
+
+        <label>RUC o CI
+          <input id="ciOrRuc" type="text" inputmode="numeric" required maxlength="13" />
+        </label>
+
+        <label>Celular
+          <input id="phone" type="tel" inputmode="numeric" required maxlength="10" />
+        </label>
+
+        <label>E-mail
+          <input id="email" type="email" required maxlength="120" />
+        </label>
+
+        <label>Rol
+ <select id="rol" required>
+            <option value="">Seleccione un rol...</option>
+            <option value="Cliente">Cliente</option>
+            <option value="Admin">Admin</option>
+          </select>
+ </label>
+
+        <label>Nueva Contraseña (Dejar en blanco para no cambiar)
+ <input id="password" type="password" required minlength="6" />
+ </label>
+
+        <div id="error" class="error" hidden></div>
+
+        <div class="actions">
+          <a class="btn ghost" href="user-list.html">Cancelar</a>
+          <button id="btnSubmit" class="btn primary" type="submit">Actualizar Usuario</button>
+        </div>
+      </form>
+    </section>
+  </main>
+  <script src="../javascript/admin-layout.js"></script>
+<script src="../javascript/user-edit.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Usuarios</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/user-list.css" />
+</head>
+<body class="admin">
+ <aside class="sidebar">
+    <div class="brand">Vista administrador</div>
+    <nav class="nav">
+      <a class="active" href="index.html">Inicio</a>
+      <a href="user-create.html">Crear Usuario</a>
+      <a class="active" href="user-list.html">Ver/Modificar Usuarios</a>
+      <a href="inventory.html">Ver Inventario</a>
+      <a href="invoices-admin.html">Ver Facturas</a>  
+    </nav>
+    <a id="logout-button" class="logout" href="#">Cerrar sesión</a>
+  </aside>
+  <main class="main">
+    <header class="header">
+      <h1>Usuarios</h1>
+      <div class="actions">
+        
+        <a class="btn" href="user-create.html">Agregar usuario</a>
+      </div>
+    </header>
+    <section class="card">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th><th>Nombre</th><th>Apellido</th><th>Cédula</th>
+            <th>Celular</th><th>Correo</th><th>Rol</th><th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div id="empty" class="empty" hidden>No hay usuarios</div>
+    </section>
+  </main>
+  <script src="../javascript/admin-layout.js"></script>
+  <script src="../javascript/user-list.js"></script>
+</body>
+</html>

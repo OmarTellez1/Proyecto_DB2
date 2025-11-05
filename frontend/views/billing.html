@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Factura</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/billing.css" />
+</head>
+<body class="admin">
+     <aside class="sidebar">
+    <div class="brand">Vista Cliente</div>
+    <nav class="nav">
+      <a class="active" href="catalog.html">Productos</a> 
+    </nav>
+    <a id="logout-button" class="logout" href="#">Cerrar sesión</a>
+  </aside>
+  <main class="main">
+    <header class="header">
+      <div class="header-inner">
+        <div class="title">
+          <h2>FACTURA</h2>
+          <div class="company">Nombre empresa</div>
+        </div>
+        <div class="code">
+          <div>CODIGO FACTURA</div>
+          <div id="inv-code" class="code-num">000000</div>
+        </div>
+      </div>
+    </header>
+
+    <section class="card">
+      <form id="form" class="form">
+        <div class="row">
+          <label>Cliente:</label>
+          <input id="c_name" placeholder="Nombre completo del usuario" />
+        </div>
+        <div class="row two">
+          <div>
+            <label>CI:</label>
+            <input id="c_ci" type="text" inputmode="numeric" pattern="\d{10,13}" minlength="10" maxlength="13" autocomplete="off" required placeholder="Número de cédula" title="Solo números, 10 a 13 dígitos" />
+          </div>
+          <div>
+            <label>Celular:</label>
+            <input id="c_phone" type="text" inputmode="numeric" pattern="\d{10}" minlength="10" maxlength="10" autocomplete="tel" required placeholder="Número celular" title="Solo números, 10 dígitos" />
+          </div>
+        </div>
+        <div class="row">
+          <label>E-mail:</label>
+          <input id="c_mail" type="email" required placeholder="Correo electrónico" />
+        </div>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width:110px">Cantidad</th>
+                <th>Descripción</th>
+                <th>Valor Unitario</th>
+                <th>Total</th>
+                <th style="width:42px"></th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" class="total-label">Total:</td>
+                <td class="total-val" id="grand-total">$0.00</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="actions">
+          <button id="btn-clear" class="btn secondary" type="button">Vaciar carrito</button>
+          <button id="btn-buy" class="btn primary" type="submit">Comprar</button>
+        </div>
+        <div class="hint">
+          <span class="mail-icon">✉️</span>
+          La factura llegará automáticamente a su e-mail
+        </div>
+        <div id="err" class="error" hidden></div>
+      </form>
+    </section>
+  </main>
+<script src="../javascript/client-layout.js"></script>
+<script src="../javascript/billing.js"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+ <meta charset="UTF-8" />
+ <title>Editar Producto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+ <link rel="stylesheet" href="../css/layout.css" />
+ <link rel="stylesheet" href="../css/user.css" /> 
+</head>
+<body class="admin">
+<aside class="sidebar">
+  <div class="brand">Vista administrador</div>
+  <nav class="nav">
+ <a href="index.html">Inicio</a>
+ <a href="user-create.html">Crear Usuario</a>
+ <a href="user-list.html">Ver/Modificar Usuarios</a>
+ <a class="active" href="inventory.html">Ver Inventario</a>
+ <a href="invoices-admin.html">Ver Facturas</a> 
+ </nav>
+ <a id="logout-button" class="logout" href="#">Cerrar sesión</a>
+</aside>
+<main class="main">
+ <header class="header"><h1>Editar Producto</h1></header>
+
+  <section class="card">
+   <form id="form" novalidate>
+   <label>Nombre del Producto
+ <input id="nombre_producto" type="text" required maxlength="100" />
+ </label>
+
+ <label>Descripción
+ <textarea id="descripcion" rows="4"></textarea>
+ </label>
+
+ <div class="row">
+ <label>Precio Unitario
+ <input id="precio_unitario" type="number" step="0.01" min="0" required />
+ </label>
+ <label>Unidades Disponibles (Stock)
+ <input id="unidades_disponibles" type="number" min="0" required />
+ </label>
+ </div>
+
+ <div id="error" class="error" hidden></div>
+
+ <div class="actions">
+ <a class="btn ghost" href="inventory.html">Cancelar</a>
+   <button id="btnSubmit" class="btn primary" type="submit">Actualizar Producto</button>
+    </div>
+   </form>
+  </section>
+</main>
+ 
+ <script src="../javascript/admin-layout.js"></script>
+ <script src="../javascript/inventory-update.js"></script>
+</body>
+</html>
