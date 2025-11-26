@@ -3,8 +3,8 @@ import ProductModel from '../models/product.model.js';
 const ProductService = {};
 
 /* ------------------------------------------------------------------------------------------------ */
-//Metodo #1
-//Llama al modelo para obtener todos los productos. ----GET----
+// Metodo #1
+// Llama al modelo para obtener todos los productos. ----GET----
 
 ProductService.getAllProducts = async () => {
   try {
@@ -17,8 +17,8 @@ ProductService.getAllProducts = async () => {
 /* ------------------------------------------------------------------------------------------------ */
 
 /* ------------------------------------------------------------------------------------------------ */
-//Metodo #2
-//Valida y llama al modelo para crear un nuevo producto. ----POST----
+// Metodo #2
+// Valida y llama al modelo para crear un nuevo producto. ----POST----
 
 /**
  * ----Esto son comentarios JSDocs----
@@ -27,35 +27,32 @@ ProductService.getAllProducts = async () => {
  */
 
 ProductService.createProduct = async (productData) => {
-  // Lógica de Negocio/Validación (Ejemplo)
-  // Basado en tu script SQL, Nombre_Producto y Precio_Unitario son NOT NULL
+  // Lógica de Negocio/Validación (Igual que en SQL)
   if (!productData.nombre_producto || !productData.precio_unitario) {
     throw new Error('El nombre y el precio unitario son obligatorios.');
   }
 
-  // Tu script SQL también define CHECK (Unidades_Disponibles >= 0)
+  // Validación manual de negativos (aunque el Schema de Mongoose también lo valida)
   if (productData.unidades_disponibles < 0) {
     throw new Error('Las unidades disponibles no pueden ser negativas.');
   }
 
   try {
-    // Si todo está bien, llamamos al modelo
     const newProduct = await ProductModel.create(productData);
     return newProduct;
   } catch (error) {
-    // Manejamos errores (ej. si el precio es negativo y falla el CHECK de la BD)
     throw error;
   }
 };
 /* ------------------------------------------------------------------------------------------------ */
 
 /* ------------------------------------------------------------------------------------------------ */
-//Metodo #3
-//Obtener producto por ID ----GET BY ID ----
+// Metodo #3
+// Obtener producto por ID ----GET BY ID ----
 
 /**
  * Llama al modelo para obtener un producto por su ID.
- * @param {number} id - El ID del producto.
+ * @param {string} id - El ID del producto (ObjectId).
  * @returns {object} El producto encontrado.
  */
 
@@ -63,75 +60,85 @@ ProductService.getProductById = async (id) => {
   try {
     const product = await ProductModel.findById(id);
 
-    // Lógica de negocio: ¿Qué pasa si el ID no existe?
     if (!product) {
       throw new Error('Producto no encontrado.');
     }
 
     return product;
   } catch (error) {
+    // --- CAMBIO MONGO: Capturar error de formato de ID ---
+    if (error.name === 'CastError') {
+       throw new Error('Producto no encontrado.');
+    }
     throw error;
   }
 };
 /* ------------------------------------------------------------------------------------------------ */
 
 /* ------------------------------------------------------------------------------------------------ */
-//Metodo #4
-//Valida y llama al modelo para actualizar un producto. ----PUT----
+// Metodo #4
+// Valida y llama al modelo para actualizar un producto. ----PUT----
 
 /**
- * @param {number} id - El ID del producto.
+ * @param {string} id - El ID del producto.
  * @param {object} productData - Los datos a actualizar.
  * @returns {object} El producto actualizado.
  */
 
 ProductService.updateProduct = async (id, productData) => {
   try {
-    // 1. (Validación CRUCIAL) Verificar si el producto existe
+    // 1. Verificar si el producto existe (Igual que en SQL)
+    // Esto también nos sirve para validar si el ID tiene formato correcto
     const existingProduct = await ProductModel.findById(id);
     if (!existingProduct) {
       throw new Error('Producto no encontrado.');
     }
 
-    // 2. (Opcional) Validar los datos de entrada
-    // Ej: Si 'unidades_disponibles' viene en los datos, verificar que no sea negativo
+    // 2. Validar los datos de entrada (Igual que en SQL)
     if (productData.unidades_disponibles < 0) {
       throw new Error('Las unidades disponibles no pueden ser negativas.');
     }
-    // ... (otras validaciones que necesites) ...
 
     // 3. Llamar al modelo para actualizar
     const updatedProduct = await ProductModel.update(id, productData);
     return updatedProduct;
 
   } catch (error) {
+    // Manejo de ID inválido
+    if (error.name === 'CastError') {
+       throw new Error('Producto no encontrado.');
+    }
     throw error;
   }
 };
 /* ------------------------------------------------------------------------------------------------ */
 
 /* ------------------------------------------------------------------------------------------------ */
-//Metodo #5
+// Metodo #5
 // Valida y llama al modelo para eliminar un producto. ----DELETE----
 
 /**
- * @param {number} id - El ID del producto.
+ * @param {string} id - El ID del producto.
  */
 
 ProductService.deleteProduct = async (id) => {
   try {
-    // 1. (Validación CRUCIAL) Verificar si el producto existe
+    // 1. Verificar si el producto existe
     const existingProduct = await ProductModel.findById(id);
     if (!existingProduct) {
       throw new Error('Producto no encontrado.');
     }
 
-    // 2. Si existe, llamamos al modelo para eliminarlo
+    // 2. Eliminar
     await ProductModel.remove(id);
 
   } catch (error) {
+    if (error.name === 'CastError') {
+       throw new Error('Producto no encontrado.');
+    }
     throw error;
   }
 };
 /* ------------------------------------------------------------------------------------------------ */
+
 export default ProductService;
