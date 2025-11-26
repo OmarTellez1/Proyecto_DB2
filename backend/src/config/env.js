@@ -5,11 +5,7 @@ import 'dotenv/config';
 // Usamos process.env para acceder a las variables cargadas desde .env
 export const config = {
   db: {
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    database: process.env.DB_DATABASE,
+    uri: process.env.MONGO_URI
   },
   // Aquí podrías añadir otras configuraciones, como el puerto del servidor
    server: {

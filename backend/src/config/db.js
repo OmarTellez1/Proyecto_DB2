@@ -1,26 +1,19 @@
-// Importamos el Pool de la librería pg (la forma recomendada de conectarse)
-import { Pool } from 'pg';
-// Importamos nuestra configuración de variables de entorno
+import mongoose from 'mongoose';
 import { config } from './env.js';
 
-// Creamos una instancia del Pool usando la configuración de la base de datos
-const pool = new Pool({
-  user: config.db.user,
-  password: config.db.password,
-  host: config.db.host,
-  port: config.db.port,
-  database: config.db.database,
-});
-
-// Opcional: Probar la conexión
-// Esto es genial para asegurarnos de que todo funciona al iniciar la app.
-pool.query('SELECT NOW()', (err, res) => {
-  if (err) {
-    console.error('Error al conectar con la base de datos:', err.stack);
-  } else {
-    console.log('Conexión exitosa a PostgreSQL establecida en:', res.rows[0].now);
+// Función para conectar a la base de datos
+const connectDB = async () => {
+  try {
+    // Intentamos conectar
+    await mongoose.connect(config.db.uri);
+    
+    console.log('🍃 Conexión exitosa a MongoDB');
+  } catch (error) {
+    console.error('❌ Error al conectar con MongoDB:', error.message);
+    // Si falla la conexión, detenemos la app porque es vital
+    process.exit(1);
   }
-});
+};
 
-// Exportamos el pool para que pueda ser usado en otros archivos (como los servicios)
-export default pool;
+// Exportamos la función para llamarla en index.js
+export default connectDB;
