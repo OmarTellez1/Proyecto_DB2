@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
    */
   async function loadUserDetails() {
     try {
-      const respuesta = await fetch(`http://localhost:3000/api/usuarios/${usuario.id_usuario}`, {
+      const respuesta = await fetch(`http://localhost:3000/api/usuarios/${usuario._id}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!respuesta.ok) throw new Error('No se pudieron cargar los datos del usuario.');
