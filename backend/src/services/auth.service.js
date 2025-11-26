@@ -39,7 +39,7 @@ AuthService.login = async (cedula, contrasena) => {
   // 5. ¡Éxito! Generar el Token (JWT)
   // El "payload" es la información que guardamos dentro del token
   const payload = {
-    id: usuario.id_usuario,
+    id: usuario._id,
     rol: usuario.rol
   };
 
@@ -51,7 +51,7 @@ AuthService.login = async (cedula, contrasena) => {
 
   // 6. Preparamos la respuesta (NO ENVIAR LA CONTRASEÑA)
   const usuarioRespuesta = {
-    id_usuario: usuario.id_usuario,
+    _id: usuario._id,
     nombre: usuario.nombre,
     apellido: usuario.apellido,
     rol: usuario.rol
