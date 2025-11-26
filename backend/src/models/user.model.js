@@ -1,184 +1,112 @@
-import pool from '../config/db.js';
+import mongoose from 'mongoose';
+
+// 1. Definimos el Esquema (Schema)
+// Esto define la estructura que antes tenías en CREATE TABLE
+const userSchema = new mongoose.Schema({
+  nombre: { type: String, required: true },
+  apellido: { type: String, required: true },
+  cedula: { type: String, required: true, unique: true },
+  celular: { type: String },
+  correo_electronico: { type: String, required: true, unique: true },
+  rol: { type: String, enum: ['Cliente', 'Admin'], required: true },
+  contrasena: { type: String, required: true },
+  estado: { type: Boolean, default: true }
+}, {
+  versionKey: false // Elimina el campo interno __v de Mongo
+});
+
+// 2. Creamos el Modelo
+const User = mongoose.model('User', userSchema);
 
 const UserModel = {};
 
 /* ------------------------------------------------------------------------------------------------ */
-//Metodo #1
-//Función para insertar un nuevo usuario en la base de datos.
+// Metodo #1
+// Función para insertar un nuevo usuario en la base de datos.
 
 /**
- * ----Comentarios JSdocs----
  * @param {object} userData - Datos del usuario (con contraseña hasheada).
- * @returns {object} El usuario recién creado (sin la contraseña).
+ * @returns {object} El usuario recién creado.
  */
-
 UserModel.create = async (userData) => {
-  const {
-    nombre,
-    apellido,
-    cedula,
-    celular,
-    correo_electronico,
-    rol,
-    contrasena // Recibimos la contraseña ya hasheada
-  } = userData;
-
-  // Consulta SQL con columnas en minúscula
-  const query = `
-    INSERT INTO usuarios (nombre, apellido, cedula, celular, correo_electronico, rol, contrasena, estado)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, true)
-    RETURNING id_usuario, nombre, apellido, correo_electronico, rol, estado; 
-  `;
+  const newUser = new User(userData);
+  const savedUser = await newUser.save();
   
-  const values = [
-    nombre,
-    apellido,
-    cedula,
-    celular,
-    correo_electronico,
-    rol,
-    contrasena
-  ];
-
-  const result = await pool.query(query, values);
-  return result.rows[0];
+  // Convertimos a objeto y borramos la contraseña antes de devolverlo (Seguridad)
+  const result = savedUser.toObject();
+  delete result.contrasena;
+  return result;
 };
 /* ------------------------------------------------------------------------------------------------ */
 
 /* ------------------------------------------------------------------------------------------------ */
-//Metodo #2
-//Función para obtener TODOS los usuarios ACTIVOS.
+// Metodo #2
+// Función para obtener TODOS los usuarios ACTIVOS.
 
 /**
  * @returns {Array} Lista de usuarios activos.
  */
-
 UserModel.findAll = async () => {
-  const query = `
-    SELECT id_usuario, nombre, apellido, cedula, celular, correo_electronico, rol, estado 
-    FROM usuarios 
-    WHERE estado = true
-    ORDER BY id_usuario ASC;
-  `;
-  const result = await pool.query(query);
-  return result.rows;
+  // .select('-contrasena') es igual a NO seleccionar esa columna en SQL
+  return await User.find({ estado: true }).select('-contrasena');
 };
 /* ------------------------------------------------------------------------------------------------ */
 
 /* ------------------------------------------------------------------------------------------------ */
-//Metodo #3
-//Función para buscar un usuario por su ID (esté activo o no).
+// Metodo #3
+// Función para buscar un usuario por su ID (esté activo o no).
 
 /**
- * @param {number} id - El ID del usuario.
+ * @param {string} id - El ID del usuario (Ahora es un string de Mongo, no un number).
  * @returns {object | null} El usuario encontrado o null si no existe.
  */
-
 UserModel.findById = async (id) => {
-  // Seleccionamos campos seguros (incluyendo estado)
-  const query = `
-    SELECT id_usuario, nombre, apellido, cedula, celular, correo_electronico, rol, estado 
-    FROM usuarios 
-    WHERE id_usuario = $1;
-  `;
-  const values = [id];
-
-  const result = await pool.query(query, values);
-  return result.rows[0];
+  // Buscamos por ID y excluimos la contraseña
+  return await User.findById(id).select('-contrasena');
 };
 /* ------------------------------------------------------------------------------------------------ */
 
 /* ------------------------------------------------------------------------------------------------ */
-//Metodo #4
-//Función para actualizar un usuario por su ID (actualización dinámica).
+// Metodo #4
+// Función para actualizar un usuario por su ID (actualización dinámica).
 
 /**
- * @param {number} id - El ID del usuario a actualizar.
- *@param {object} dataToUpdate - Objeto con los campos a actualizar (ej. { rol: 'Admin', estado: false }).
+ * @param {string} id - El ID del usuario a actualizar.
+ * @param {object} dataToUpdate - Objeto con los campos a actualizar.
  * @returns {object | null} El usuario actualizado (sin contraseña).
  */
-
 UserModel.update = async (id, dataToUpdate) => {
-  // 1. Obtenemos las claves (campos) del objeto
-  // Ej: ['rol', 'estado']
-  const fields = Object.keys(dataToUpdate);
-
-  // 2. Creamos la parte SET de la consulta dinámicamente
-  // Ej: rol = $1, estado = $2
-  const setString = fields
-    .map((field, index) => `${field} = $${index + 1}`)
-    .join(', ');
-
-  if (setString.length === 0) {
-    return UserModel.findById(id); // No hay nada que actualizar
-  }
-
-  // 3. Obtenemos los valores
-  const values = Object.values(dataToUpdate);
-  
-  // 4. Añadimos el ID al final del array de valores para el WHERE
-  const idIndex = values.length + 1;
-  values.push(id);
-
-  // 5. Construimos la consulta final
-  // Devolvemos solo los campos seguros
-  const query = `
-    UPDATE usuarios
-    SET ${setString}
-    WHERE id_usuario = $${idIndex}
-    RETURNING id_usuario, nombre, apellido, correo_electronico, rol, estado;
-  `;
-
-  // 6. Ejecutamos la consulta
-  const result = await pool.query(query, values);
-  return result.rows[0];
+  // { new: true } devuelve el documento actualizado
+  return await User.findByIdAndUpdate(id, dataToUpdate, { new: true }).select('-contrasena');
 };
 /* ------------------------------------------------------------------------------------------------ */
 
 /* ------------------------------------------------------------------------------------------------ */
-//Metodo #5
+// Metodo #5
 /**
  * Busca un usuario por su cédula.
  * ¡Esta es la única función que DEBE seleccionar la contraseña y el estado!
  * @param {string} cedula - La cédula del usuario.
  * @returns {object | null} El usuario completo (incluyendo hash de contraseña).
  */
-
 UserModel.findByCedula = async (cedula) => {
-  // Seleccionamos todos los campos necesarios para la autenticación
-  const query = `
-    SELECT id_usuario, nombre, apellido, rol, estado, contrasena 
-    FROM usuarios 
-    WHERE cedula = $1;
-  `;
-  const values = [cedula];
-  
-  const result = await pool.query(query, values);
-  
-  // Devolvemos el usuario completo
-  return result.rows[0];
+  // Aquí NO excluimos la contraseña porque Auth la necesita
+  return await User.findOne({ cedula: cedula });
 };
 /* ------------------------------------------------------------------------------------------------ */
 
 /* ------------------------------------------------------------------------------------------------ */
-//Metodo #6
-//Busca los detalles de un usuario por su ID para el correo de facturación.
+// Metodo #6
+// Busca los detalles de un usuario por su ID para el correo de facturación.
 
 /**
- * @param {number} id - El ID del usuario.
- * @param {object} client - La conexión activa de la transacción.
+ * @param {string} id - El ID del usuario.
  * @returns {object} { nombre, apellido, cedula, celular, correo_electronico }
  */
-
-UserModel.findDetailsForEmail = async (id, client) => {
-  // Añadimos apellido, cedula y celular a la consulta
-  const query = `
-    SELECT nombre, apellido, cedula, celular, correo_electronico 
-    FROM usuarios 
-    WHERE id_usuario = $1
-  `;
-  const result = await client.query(query, [id]);
-  return result.rows[0];
+UserModel.findDetailsForEmail = async (id) => {
+  // Seleccionamos solo los campos específicos, igual que en tu SQL
+  return await User.findById(id).select('nombre apellido cedula celular correo_electronico');
 };
 /* ------------------------------------------------------------------------------------------------ */
+
 export default UserModel;
