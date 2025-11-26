@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const facturaHtml = `
       <div class="card" style="margin-top: 20px;">
         <div style="padding: 20px;">
-          <h3>Factura #${factura.id_factura} (Fecha: ${factura.fecha})</h3>
+          <h3>Factura #${factura._id} (Fecha: ${factura.fecha})</h3>
           
           <h4 style="margin-top: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px;">Cliente</h4>
           <p>

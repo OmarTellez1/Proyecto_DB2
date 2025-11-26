@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const card = document.createElement('div');
       card.className = 'card';
       // Guardamos los datos del producto en el elemento
-      card.dataset.id = prod.id_producto;
+      card.dataset.id = prod._id;
       card.dataset.nombre = prod.nombre_producto;
       card.dataset.precio = prod.precio_unitario;
 
@@ -71,9 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
             <p>${prod.descripcion || 'Descripción no disponible.'}</p>
             <p class="price">$${prod.precio_unitario}</p>
             <div class="actions">
-                <button class="btn-qty btn-remove" data-id="${prod.id_producto}">-</button>
-                <span class="qty" data-id="${prod.id_producto}">0</span>
-                <button class="btn-qty btn-add" data-id="${prod.id_producto}">+</button>
+                <button class="btn-qty btn-remove" data-id="${prod._id}">-</button>
+                <span class="qty" data-id="${prod._id}">0</span>
+                <button class="btn-qty btn-add" data-id="${prod._id}">+</button>
             </div>
         </div>
       `;
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- 6. LÓGICA DEL CARRITO ---
   function addToCart(productId) {
     // Buscamos el producto en el array 'cart'
-    let itemInCart = cart.find(item => item.id_producto == productId);
+    let itemInCart = cart.find(item => item._id === productId);
     
     // Obtenemos los datos de la tarjeta que renderizamos
     const productCard = catalogGrid.querySelector(`.card[data-id='${productId}']`);
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       // Si es nuevo, lo añadimos al array
       cart.push({ 
-        id_producto: parseInt(productId), 
+        _id: productId, 
         nombre: nombre, 
         precio_unitario: precio, 
         unidades: 1 
@@ -110,13 +110,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function removeFromCart(productId) {
-    let itemInCart = cart.find(item => item.id_producto == productId);
+    let itemInCart = cart.find(item => item._id === productId);
     
     if (itemInCart) {
       itemInCart.unidades--;
       if (itemInCart.unidades <= 0) {
         // Si las unidades llegan a 0, lo eliminamos del array
-        cart = cart.filter(item => item.id_producto != productId);
+        cart = cart.filter(item => item._id !== productId);
       }
       saveCart();
     }
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Actualizamos solo los que están en el carrito
     cart.forEach(item => {
-      const span = document.querySelector(`.qty[data-id='${item.id_producto}']`);
+      const span = document.querySelector(`.qty[data-id='${item._id}']`);
       if (span) {
         span.textContent = item.unidades;
       }

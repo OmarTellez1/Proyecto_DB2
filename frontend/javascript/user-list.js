@@ -97,7 +97,7 @@ function renderUserTable(usuarios) {
   usuarios.forEach(user => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${user.id_usuario}</td>
+      <td>${user._id}</td>
       <td>${user.nombre}</td>
       <td>${user.apellido}</td>
       <td>${user.cedula}</td>
@@ -106,8 +106,8 @@ function renderUserTable(usuarios) {
       <td>${user.rol}</td>
       <td>${user.estado ? 'Activo' : 'Inactivo'}</td>
       <td>
-        <button class="btn-edit" data-id="${user.id_usuario}">Editar</button>
-        <button class="btn-delete" data-id="${user.id_usuario}">Desactivar</button>
+        <button class="btn-edit" data-id="${user._id}">Editar</button>
+        <button class="btn-delete" data-id="${user._id}">Desactivar</button>
       </td>
     `;
     tbody.appendChild(tr);

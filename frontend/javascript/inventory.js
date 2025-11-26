@@ -56,9 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // 3. Añadimos los IDs a los botones y a la tarjeta
       // (Usamos .closest('.card') en el listener, pero es bueno tenerlo)
-      card.querySelector('.card').dataset.id = prod.id_producto;
-      card.querySelector('.edit').dataset.id = prod.id_producto;
-      card.querySelector('.del').dataset.id = prod.id_producto;
+      card.querySelector('.card').dataset.id = prod._id;
+      card.querySelector('.edit').dataset.id = prod._id;
+      card.querySelector('.del').dataset.id = prod._id;
 
       // 4. Añadimos el clon a la cuadrícula
       grid.appendChild(card);

@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <td>$${Number(item.precio_unitario).toFixed(2)}</td>
         <td>$${itemTotal.toFixed(2)}</td>
         <td>
-          <button type="button" class="btn-remove-item" data-id="${item.id_producto}">X</button>
+          <button type="button" class="btn-remove-item" data-id="${item._id}">X</button>
         </td>
       `;
       tbody.appendChild(tr);
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 1. Formateamos el carrito para la API (solo ID y unidades)
     const itemsParaAPI = cart.map(item => ({
-      id_producto: item.id_producto,
+      id_producto: item._id,
       unidades: item.unidades
     }));
 
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (e.target.classList.contains('btn-remove-item')) {
       const id = e.target.dataset.id;
       // Quitamos el ítem del carrito
-      cart = cart.filter(item => item.id_producto != id);
+      cart = cart.filter(item => item._id != id);
       
       // Si el carrito queda vacío, lo mandamos de vuelta al catálogo
       if (cart.length === 0) {
