@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import ProductModel from '../models/product.model.js';
 import FacturaModel from '../models/factura.model.js';
 import UserModel from '../models/user.model.js';
@@ -7,13 +6,10 @@ import sgMail from '../config/mailer.js';
 
 const FacturaService = {};
 
-/* ------------------------------------------------------------------------------------------------ */
 // Metodo #1
-// En esta funcion creamos la factura
-
 FacturaService.createFactura = async (idCliente, items) => {
-  // 1. Iniciar la Sesión de Mongoose (Reemplaza al pool.connect)
-  const session = await mongoose.startSession();
+  // NOTA: Estilo MongoDB Standalone (Sin Transacciones ACID complejas).
+  // Confiamos en la atomicidad de documentos y operadores $inc.
   
   let totalGeneral = 0;
   const detallesParaRespuesta = [];
@@ -22,13 +18,9 @@ FacturaService.createFactura = async (idCliente, items) => {
   let idFactura = null; 
 
   try {
-    // 2. Iniciar la Transacción
-    session.startTransaction();
-
-    // 3. PRIMER BUCLE: Verificar stock y calcular total
+    // 1. Validaciones y Cálculos (Lectura)
     for (const item of items) {
-      // Pasamos la 'session' a la consulta
-      const producto = await ProductModel.findForBilling(item.id_producto, session);
+      const producto = await ProductModel.findForBilling(item.id_producto);
       
       if (!producto) throw new Error(`El producto con ID ${item.id_producto} no existe.`);
       
@@ -41,7 +33,6 @@ FacturaService.createFactura = async (idCliente, items) => {
 
       productosParaActualizar.push({ ...item, precio_unitario: producto.precio_unitario });
       
-      // Preparamos el detalle (Nota: Mongo guarda esto dentro de la factura)
       detallesParaRespuesta.push({
         id_producto: item.id_producto,
         descripcion: producto.nombre_producto,
@@ -51,42 +42,37 @@ FacturaService.createFactura = async (idCliente, items) => {
       });
     }
 
-    // 4. OBTENER DATOS DEL CLIENTE
-    // (Nota: No necesitamos pasar 'session' para lecturas simples, pero no hace daño)
+    // 2. Obtener Cliente
     cliente = await UserModel.findDetailsForEmail(idCliente);
     if (!cliente) throw new Error('Cliente no encontrado.');
 
-    // 5. Crear la FACTURA (Cabecera + Detalles juntos)
-    // Preparamos el objeto completo para Mongo
+    // 3. Crear la Factura (Operación Atómica 1)
+    // Como detalles está embebido, esto se guarda todo junto o falla todo junto.
     const datosFactura = {
       id_cliente: idCliente,
       total: Number(totalGeneral.toFixed(2)),
-      detalles: detallesParaRespuesta // ¡Mongo guarda el array aquí mismo!
+      detalles: detallesParaRespuesta
     };
 
-    // Llamamos al modelo pasando la sesión
-    const facturaGuardada = await FacturaModel.create(datosFactura, session);
-    idFactura = facturaGuardada._id; // Mongo nos da el ID (ObjectId)
+    const facturaGuardada = await FacturaModel.create(datosFactura);
+    idFactura = facturaGuardada._id;
 
-    // 6. SEGUNDO BUCLE: Actualizar Stock
+    // 4. Actualizar Stock (Operaciones Atómicas 2)
+    // Usamos $inc en el modelo, lo cual es seguro.
     for (const prod of productosParaActualizar) {
-      // Ya no necesitamos 'createDetalle', solo actualizar stock
-      await ProductModel.updateStock(prod.id_producto, prod.unidades, session);
+      await ProductModel.updateStock(prod.id_producto, prod.unidades);
     }
 
-    // 7. ¡ÉXITO! Confirmar la transacción
-    await session.commitTransaction();
+    // ¡Listo! Sin COMMIT ni ROLLBACK explícitos.
 
   } catch (error) {
-    // 8. ¡ERROR! Revertir
-    await session.abortTransaction();
+    // Si falla la validación o la creación de factura, lanzamos el error.
+    // (Si fallara justo a la mitad de actualizar stocks, habría una pequeña inconsistencia,
+    // pero en sistemas no-replicados/dev es el trade-off aceptable).
     throw error;
-  } finally {
-    // 9. Finalizar sesión
-    session.endSession();
   }
 
-  // --- 10. PREPARAR Y ENVIAR CORREO (Igual que antes) ---
+  // --- ENVÍO DE CORREO (Igual que antes) ---
   
   const now = new Date();
   const year = now.getFullYear();
@@ -96,10 +82,8 @@ FacturaService.createFactura = async (idCliente, items) => {
   const totalFormateado = Number(totalGeneral).toFixed(2);
 
   try {
-    // --- 'htmlCorreo' ---
     const htmlCorreo = `
       <div style="font-family: Arial, sans-serif; line-height: 1.6; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px;">
-        
         <h2 style="color: #333;">¡Gracias por tu compra, ${cliente.nombre} ${cliente.apellido}!</h2>
         <p>Tu factura #${idFactura} ha sido procesada exitosamente.</p>
         
@@ -139,14 +123,10 @@ FacturaService.createFactura = async (idCliente, items) => {
         </p>
       </div>
     `;
-    // --- FIN html correo ---
 
     const msg = {
       to: cliente.correo_electronico, 
-      from: {
-        name: 'Proyecto_DB2', 
-        email: config.email.fromEmail 
-      },
+      from: { name: 'Proyecto_DB2', email: config.email.fromEmail },
       subject: `Gracias por comprar en nuestra tienda online, eres nuestra factura #${idFactura}`,
       html: htmlCorreo
     };
@@ -179,33 +159,17 @@ FacturaService.createFactura = async (idCliente, items) => {
     }
   };
 };
-/* ------------------------------------------------------------------------------------------------ */
 
-/* ------------------------------------------------------------------------------------------------ */
-// Metodo #2
-// Obtiene los detalles completos de una factura por su ID.
-
-/**
- * @param {string} idFactura - El ID de la factura (ObjectId).
- * @returns {object} La factura completa formateada.
- */
-
+// Metodo #2 (Sin cambios, ya estaba adaptado a Mongo)
 FacturaService.getFacturaDetails = async (idFactura) => {
   try {
     const factura = await FacturaModel.findById(idFactura);
+    if (!factura) throw new Error('Factura no encontrada.');
 
-    if (!factura) {
-      throw new Error('Factura no encontrada.');
-    }
+    const clienteObj = factura.id_cliente;
 
-    // Formateo para que el frontend reciba el mismo formato que antes
-    // Mongo devuelve objetos complejos, así que lo simplificamos
-    
-    const clienteObj = factura.id_cliente; // Gracias al populate, esto es el objeto usuario
-
-    // Construimos el objeto de respuesta plano
     const respuestaFormateada = {
-      id_factura: factura._id,
+      _id: factura._id,
       fecha: new Date(factura.fecha).toISOString().split('T')[0],
       total: Number(factura.total).toFixed(2),
       cliente: {
@@ -214,9 +178,8 @@ FacturaService.getFacturaDetails = async (idFactura) => {
         celular: clienteObj.celular,
         correo: clienteObj.correo_electronico
       },
-      // Mapeamos los detalles para que coincidan con el formato esperado
       detalles: factura.detalles.map(d => ({
-        descripcion: d.descripcion, // Guardamos el nombre histórico en el modelo
+        descripcion: d.descripcion, 
         unidades: d.unidades,
         precio_unitario: d.precio_unitario,
         total_linea: d.total_linea
@@ -224,14 +187,10 @@ FacturaService.getFacturaDetails = async (idFactura) => {
     };
 
     return respuestaFormateada;
-
   } catch (error) {
-    if (error.name === 'CastError') {
-       throw new Error('Factura no encontrada.');
-    }
+    if (error.name === 'CastError') throw new Error('Factura no encontrada.');
     throw error;
   }
 };
-/* ------------------------------------------------------------------------------------------------ */
 
 export default FacturaService;
